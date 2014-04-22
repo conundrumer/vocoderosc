@@ -17,15 +17,14 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
                            void *userData )
 {
 
-    /* Cast data passed through stream to our structure. */
+    /* Cast data passed through stream to Synth. */
     Synth *synth = (Synth*)userData;
     float *out = (float*)outputBuffer;
     (void) inputBuffer; /* Prevent unused variable warning. */
 
     float* synthBuffer = synth_getBuffer(framesPerBuffer, synth);
     unsigned int i;
-    for( i=0; i<framesPerBuffer; i++ )
-    {
+    for( i=0; i<framesPerBuffer; i++ ) {
         *out++ = synthBuffer[i];
         *out++ = synthBuffer[i];
         // printf("out: %f\n\n", synthBuffer[i]);
@@ -35,8 +34,7 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
 
 /*******************************************************************/
 int main(void);
-int main(void)
-{
+int main(void) {
     PaStream *stream;
     PaError err;
 
@@ -62,6 +60,7 @@ int main(void)
     err = Pa_StartStream( stream );
     if( err != paNoError ) goto error;
 
+    /* Start listening for TouchOSC messages */
     runServer(synth);
 
     /* Sleep for several seconds. */

@@ -29,7 +29,6 @@ int runServer(Synth* synth) {
     struct timeval tv;
 #endif
     int retval;
-    // Synth* synth = synth_new(44100, 5);
 
     /* start a new server on port 7770 */
     lo_server s = lo_server_new("7770", error);
