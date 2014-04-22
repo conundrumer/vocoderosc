@@ -2,7 +2,7 @@
 #include <math.h>
 #include "portaudio.h"
 #include "synth.h"
-#define NUM_VOICES    (2)
+#define NUM_VOICES    (12)
 #define NUM_SECONDS   (4)
 #define SAMPLE_RATE   (44100)
 
@@ -19,12 +19,11 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
 
     /* Cast data passed through stream to our structure. */
     Synth *synth = (Synth*)userData;
-    // paTestData *data = (paTestData*)userData;
     float *out = (float*)outputBuffer;
-    unsigned int i;
     (void) inputBuffer; /* Prevent unused variable warning. */
 
     float* synthBuffer = synth_getBuffer(framesPerBuffer, synth);
+    unsigned int i;
     for( i=0; i<framesPerBuffer; i++ )
     {
         *out++ = synthBuffer[i];
@@ -35,7 +34,6 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
 }
 
 /*******************************************************************/
-// static paTestData data;
 int main(void);
 int main(void)
 {
@@ -44,9 +42,7 @@ int main(void)
 
     printf("PortAudio Test: output sawtooth wave.\n");
     /* Initialize our data for use by callback. */
-    // data.left_phase = data.right_phase = 0.0;
     Synth* synth = synth_new(SAMPLE_RATE, NUM_VOICES);
-    // data.synth = synth;
 
     /* Initialize library before making any other calls. */
     err = Pa_Initialize();
@@ -68,16 +64,16 @@ int main(void)
 
     runServer(synth);
 
-    // /* Sleep for several seconds. */
-    // Pa_Sleep(NUM_SECONDS*1000);
+    /* Sleep for several seconds. */
+    Pa_Sleep(NUM_SECONDS*1000);
 
-    // err = Pa_StopStream( stream );
-    // if( err != paNoError ) goto error;
-    // err = Pa_CloseStream( stream );
-    // if( err != paNoError ) goto error;
-    // Pa_Terminate();
-    // printf("Test finished.\n");
-    // return err;
+    err = Pa_StopStream( stream );
+    if( err != paNoError ) goto error;
+    err = Pa_CloseStream( stream );
+    if( err != paNoError ) goto error;
+    Pa_Terminate();
+    printf("Test finished.\n");
+    return err;
 error:
     Pa_Terminate();
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
