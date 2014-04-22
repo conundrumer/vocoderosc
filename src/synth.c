@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "synth.h"
 
 Synth* synth_new(int fs, int numvoices) {
@@ -19,6 +20,8 @@ void synth_on(int key, Synth* s) {
 	for (i = 0; i < s->poly; i++) {
 		if (check_key(-1,saws[i])) { // this saw is not active
 			saw_on(key, saws[i]);
+			printf("key: %d\nsaw: %d\n", key, i);
+			return;
 		}
 	}
 }
@@ -29,6 +32,8 @@ void synth_off(int key, Synth* s) {
 	for (i = 0; i < s->poly; i++) {
 		if (check_key(key, saws[i])) {
 			saw_off(saws[i]);
+			printf("synth_off: key = %d\nsaw: %d\n\n", key,i);
+			return;
 		}
 	}
 }
@@ -37,6 +42,25 @@ void synth_free(Synth* s) {
 	free(s);
 }
 
-float* synth_getBuffer(int bufLenght, void* data) {
-	//??
+float* synth_getBuffer(int bufLength, Synth* s) {
+	// voices? how to poly?
+	// int sum = 0;
+	int i, j;
+	Saw** saws = s-> saws;
+	float* outputBuffer = malloc(bufLength*sizeof(float));
+	for (i = 0; i < bufLength; i++) {
+		float sample = 0.0;
+		// printf("=========\nframe: %d\n", i+1);
+		for (j = 0; j < s->poly; j++) {
+			if (saws[j]->key > -1) {
+				sample += saws[j]->phase;
+				saws[j]->phase += 1.0/(20.0*saws[j]->period);
+				// printf("saw: %d\nkey: %d\nphase: %f\n\n", j, saws[j]->key, saws[j]->phase);
+				// Drop to -1.0 when signal reaches 1.0
+				if (saws[j]->phase >= 1.0f) saws[j]->phase = -1.0f;
+			}
+		}
+		outputBuffer[i] = sample;
+	}
+	return outputBuffer;
 }

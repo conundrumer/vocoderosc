@@ -4,7 +4,7 @@ typedef struct {
 	int fs;
 	int key; // -1 means off
 	int period;
-	int phase;
+	float phase;
 } Saw;
 
 Saw* saw_new(int fs);
