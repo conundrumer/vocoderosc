@@ -2,7 +2,7 @@
 #include "fx.h"
 
 Fx* fx_new(AudioFx audioFx, void* fxData) {
-    Fx* fx = malloc(sizeof(Fx));
+    Fx* fx = malloc(sizeof(Fx*));
     fx->audioFx = audioFx;
     fx->fxData = fxData;
     return fx;
