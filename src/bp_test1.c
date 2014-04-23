@@ -9,7 +9,7 @@ int main() {
     int fs = 4;
     float freq = 1.0;
     float bw = 0.2;
-    Fx* fx = fx_new(bp_filter, bp_new(freq, bw, fs));
+    Fx* fx = fx_new(bp_filter, bp_free, bp_new(freq, bw, fs));
     float impulse = 1.0;
     int i;
     printf("Testing impulse response...\n");
@@ -35,6 +35,6 @@ int main() {
             printf("%f\t%f\n", input, output);
         }
     }
-    fx_free(fx, bp_free);
+    fx_free(fx);
     return 0;
 }

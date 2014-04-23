@@ -27,10 +27,12 @@ void g_free(void* data) {
 }
 
 int main() {
-    Fx* fx = fx_new(g_process, g_new(0.5));
+    // CHANGE: FX_NEW NOW TAKES FXFREE
+    Fx* fx = fx_new(g_process, g_free, g_new(0.5));
     float input = 1.0;
     float output = fx_process(fx, input, 0, 1);
     printf("input: %f, output: %f", input, output);
-    fx_free(fx, g_free);
+    // CHANGE: FX_FREE DOES NOT TAKE FXFREE
+    fx_free(fx);
     return 0;
 }
