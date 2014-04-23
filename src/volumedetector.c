@@ -2,12 +2,12 @@
 #include "volumedetector.h"
 
 typedef struct {
-	void (*callback)(float volume, void* params);
+	VdCallback callback;
 	void* callbackparams;
 	float avg;
 } Vd;
 
-void* vd_new(void (*callback)(float, void*), void* callbackparams) {
+void* vd_new(VdCallback callback, void* callbackparams) {
 	Vd* v = malloc(sizeof(Vd));
 	v->avg = 0;
 	v->callback = callback;

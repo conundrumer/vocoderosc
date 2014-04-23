@@ -1,6 +1,5 @@
 #pragma once
-#include <stdlib.h>
-#include <math.h>
+
 #include "fx.h"
 
 // frequency range from f_low to f_high
