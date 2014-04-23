@@ -12,4 +12,4 @@ float mb_filter(float input, int i, int bufLength, void* data);
 void mb_free(void* data);
 
 // band is the index of the band, from low 0 to numBands
-void mb_addFx(Fx* fx, int band);
+void mb_addFx(Fx* fx, int band, void* data);
