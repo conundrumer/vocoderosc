@@ -13,8 +13,11 @@
  * adjustments from attack/decay
  */
 float at_filter(float input, int i, int buflength, void* data) {
+  (void)data;
+  (void)i;
+  
   for (int j = 0; j < buflength; j++) {
-    
+    printf("Looping\n");
   }
   return input;
   
