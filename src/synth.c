@@ -21,10 +21,12 @@ void synth_on(int key, Synth* s) {
 	for (i = 0; i < s->poly; i++) {
 		if (check_key(-1, saws[i])) { // this saw is not active
 			saw_on(key, saws[i]);
-			printf("Key: %d    Saw: %d    ON\n", key, i);
+			printf("%d -> %d    %d\n", i, key, 1);
+			// printf("Key: %d    Saw: %d    ON\n", key, i);
 			return;
 		}
 	}
+	printf("could not find available saw\n");
 	return;
 }
 
@@ -34,7 +36,8 @@ void synth_off(int key, Synth* s) {
 	for (i = 0; i < s->poly; i++) {
 		if (check_key(key, saws[i])) {
 			saw_off(saws[i]);
-			printf("Key: %d    Saw: %d    OFF\n", key, i);
+			printf("%d -> %d    %d\n", i, key, 0);
+			// printf("Key: %d    Saw: %d    OFF\n", key, i);
 			return;
 		}
 	}
@@ -57,6 +60,28 @@ float* synth_getBuffer(int bufLength, Synth* s) {
 		}
 		outputBuffer[i] = sample;
 	}
+	free(outputBuffer);
 	return outputBuffer;
 }
 
+// int main() {
+// 	Synth* s = synth_new(44100, 12);
+// 	int i;
+// 	for (i = 1; i <= 12; i++) {
+// 		synth_on(i,s);
+// 	}
+// 	for (i = 1; i <= 12; i++) {
+// 		synth_on(i,s);
+// 	}
+// 	for (i = 1; i <= 12; i++) {
+// 		synth_off(i,s);
+// 	}
+// 	for (i = 1; i <= 12; i++) {
+// 		synth_off(i,s);
+// 	}
+// 	for (i = 1; i <= 12; i++) {
+// 		synth_on(i,s);
+// 		synth_off(i,s);
+// 	}
+// 	return 0;
+// }

@@ -42,6 +42,10 @@ float saw_getNext(Saw* saw) {
 	return saw->currentSample;
 }
 
+// void saw_free(Saw* saw) {
+// 	free(saw);
+// }
+
 // int main(void) {
 // 	Saw* s = saw_new(44100);
 
