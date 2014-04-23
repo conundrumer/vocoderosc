@@ -30,3 +30,6 @@ mb_test1:
 
 vcc:
 	gcc -o bin/vcc -Wall -Wextra src/vocodercarrier.c src/attenuator.c src/fx_multiband.c src/fx.c src/bandpass.c src/utils.c -lm
+
+vcmtest:
+	gcc -o bin/vcmtest -Wall src/fx.c src/bandpass.c src/volumedetector.c src/utils.c src/fx_multiband.c src/vocodermodulator.c src/vcmtest.c
