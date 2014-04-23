@@ -2,7 +2,6 @@
 
 #include "fx.h"
 #include "volumedetector.h"
-#include "fx_multiband.h"
 
 void* vcm_new(float f_low, float f_high, int numBands, int fs,
 	VdCallback bandVolumeCallback, void* callbackparams);
