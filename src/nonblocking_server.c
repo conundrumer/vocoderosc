@@ -44,6 +44,7 @@ int startLO(Synth* synth) {
     for (i = 1; i <= 12; i++) {
         char path[10];
         snprintf(path, 10, "/1/push%d", i);
+        // printf("i: %s\n", path);
         lo_server_add_method(s, path, "i", push_handler, synth);
     }
 
@@ -61,15 +62,10 @@ int startLO(Synth* synth) {
             FD_SET(0, &rfds);   /* stdin */
 #endif
             FD_SET(lo_fd, &rfds);
-
             retval = select(lo_fd + 1, &rfds, NULL, NULL, NULL);        /* no timeout */
-
             if (retval == -1) {
                 printf("select() error\n");
                 exit(1);
-            // } else if (retval > 0 && FD_ISSET(lo_fd, &rfds)) {
-            //     lo_server_recv_noblock(s, 0);
-            // }
             } else if (retval > 0) {
                 if (FD_ISSET(0, &rfds)) {
                     read_stdin(synth);
@@ -94,33 +90,34 @@ int startLO(Synth* synth) {
             tv.tv_usec = 10000;
 
             retval = select(1, &rfds, NULL, NULL, &tv); /* timeout every 10ms */
-            
+
             if (retval == -1) {
                 printf("select() error\n");
                 exit(1);
             } else if (retval > 0 && FD_ISSET(0, &rfds)) {
                 read_stdin(synth);
             }
+
             lo_server_recv_noblock(s, 0);
         } while (!done);
-        #endif
+#endif
     }
     return 0;
 }
 
 int push_handler(const char *path, const char *types, lo_arg ** argv,
                 int argc, void *data, void *user_data) {
+
     (void) types;
     (void) argc;
     (void) data;
-    printf("whee\n");
 
     char *keystr = (char*) malloc(2);
     strncpy(keystr, path+7, strlen(path)-7);
     int key = atoi(keystr);
     int note_on = argv[0]->i;
-    fflush(stdout);
     Synth* synth = (Synth*) user_data;
+    
     if (note_on) {
         synth_on(key, synth);
     } else {
@@ -162,6 +159,10 @@ void read_stdin(Synth* synth) {
         printf("stdin: %d\n",input);
     }
 }
+
+// void read_stdin(Synth* synth) {
+//     return;
+// }
 
 /* vi:set ts=8 sts=4 sw=4: */
 
