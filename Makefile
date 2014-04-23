@@ -19,6 +19,9 @@ synthserv:
 at:
 	gcc -o bin/at src/attenuator.c -Wall -Wextra
 
+vol:
+	gcc -o bin/vol src/volumedetector.c -Wall -Wextra	
+
 bp_test1:
 	gcc -o bin/bp_test1 -Wall -Wextra src/fx.c src/bp_test1.c src/bandpass.c src/utils.c
 	
