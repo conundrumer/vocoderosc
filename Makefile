@@ -27,3 +27,6 @@ bp_test1:
 
 mb_test1:
 	gcc -o bin/mb_test1 -Wall -Wextra src/fx.c src/mb_test1.c src/bandpass.c src/utils.c src/fx_multiband.c
+
+vcc:
+	gcc -o bin/vcc -Wall -Wextra src/vocodercarrier.c src/attenuator.c src/fx_multiband.c src/fx.c src/bandpass.c src/utils.c -lm

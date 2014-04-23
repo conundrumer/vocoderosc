@@ -12,4 +12,4 @@ float vcc_filter(float input, int i, int bufLength, void* data);
 void vcc_free(void* data);
 
 // VdCallback for vocodermodulator, bandVolume is BandVolume*
-void vcc_setBandVolume(float volume, void* band, void* data);
+void vcc_setBandVolume(float volume, void* bandVolume);

@@ -52,27 +52,27 @@ void at_setGain(float gain, void* data) {
 	at->gain = gain;
 }
 
-int main() {
-	int buflength = 25;
-	int i;
-	float prev = 0.0;
-	float x;
-	float* sintable = malloc(buflength*sizeof(float));
-	// printf("\n................................\ni\tx\t\tsin(x)\n................................\n");
-	for (i = 0; i < buflength; i++) {
-		x = 3*M_PI*((float)i/buflength);
-		prev = sin(x);
-		sintable[i]=prev;
-		// printf("%d\t%f\t%f\n",i,x,sintable[i]);
-	}
+// int main() {
+// 	int buflength = 25;
+// 	int i;
+// 	float prev = 0.0;
+// 	float x;
+// 	float* sintable = malloc(buflength*sizeof(float));
+// 	// printf("\n................................\ni\tx\t\tsin(x)\n................................\n");
+// 	for (i = 0; i < buflength; i++) {
+// 		x = 3*M_PI*((float)i/buflength);
+// 		prev = sin(x);
+// 		sintable[i]=prev;
+// 		// printf("%d\t%f\t%f\n",i,x,sintable[i]);
+// 	}
 
-	At* at = at_new(0.25, 0.75);
-	at_setGain(8.0,(void*)at);
-	float filtered;
-	printf("\ngain = 8.0\n......................................\ni\torig\t\tnew\n......................................\n");
-	for (i = 0; i < buflength; i++) {
-		filtered = at_filter(sintable[i],i,buflength,at);
-		printf("%d\t%f\t%f\n",i,sintable[i],filtered);
-	}
-	return 0;
-}
+// 	At* at = at_new(0.25, 0.75);
+// 	at_setGain(8.0,(void*)at);
+// 	float filtered;
+// 	printf("\ngain = 8.0\n......................................\ni\torig\t\tnew\n......................................\n");
+// 	for (i = 0; i < buflength; i++) {
+// 		filtered = at_filter(sintable[i],i,buflength,at);
+// 		printf("%d\t%f\t%f\n",i,sintable[i],filtered);
+// 	}
+// 	return 0;
+// }

@@ -2,5 +2,5 @@
 
 typedef struct {
 	int band;
-	void* fxData;
+	void* data;
 } BandVolume;

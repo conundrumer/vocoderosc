@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "vocodercarrier.h"
 #include "bandVolume.h"
 #include "attenuator.h"
@@ -23,7 +24,7 @@ void* vcc_new(float f_low, float f_high, int numBands, int fs) {
 	void** ats = malloc(numBands*sizeof(void*));
 	for (i = 0; i < numBands; i++) {
 		void* rawAt = at_new(1.0, 1.0);	
-		Fx* at = fx_new(at_filter, at_free, rawAt)
+		Fx* at = fx_new(at_filter, at_free, rawAt);
 		mb_addFx(at, i, rawMb);
 		ats[i] = (void*)rawAt;
 	}
@@ -38,20 +39,26 @@ void* vcc_new(float f_low, float f_high, int numBands, int fs) {
 
 float vcc_filter(float input, int i, int bufLength, void* data) {
 	Vcc* vcc = (Vcc*) data;
-	fx_process(vcc->mb, input, i, buflength);
+	float output = fx_process(vcc->mb, input, i, bufLength);
+	return output;
 }
 
 void vcc_free(void* data) {
 	Vcc* vcc = (Vcc*) data;
+	free(vcc->ats);
 	mb_free((void*)vcc->mb);
 	free(vcc);
 }
 
 // VdCallback for vocodermodulator, bandVolume is BandVolume*
 void vcc_setBandVolume(float volume, void* bandVolume) {
-	BandVolume* bv = (BandVolume*)bandVolume;
-	Vcc* vcc = (Vcc*)bv->data;
+	BandVolume* bv = (BandVolume*) bandVolume;
+	Vcc* vcc = (Vcc*)(bv->data);
 	void* at = vcc->ats[bv->band];
 	at_setGain(volume, at);
 	mb_addFx(at, bv->band, vcc->mb);
+}
+
+int main() {
+	return 0;
 }
