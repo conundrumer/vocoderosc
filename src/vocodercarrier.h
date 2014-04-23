@@ -2,6 +2,13 @@
 
 #include "fx.h"
 
+typedef struct{
+	float f_low;
+	float f_high;
+	int numBands;
+	int fs;
+} Vcc;
+
 // frequency range from f_low to f_high
 // in numBands bands of constant q
 // ie logarithmically spaced
