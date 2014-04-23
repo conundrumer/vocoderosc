@@ -15,3 +15,6 @@ fx_example:
 
 synthserv:
 	gcc -o bin/synthserv -Wall -Wextra src/synthserv.c src/synth.c src/pasynth.c src/nonblocking_server.c src/saw.c -llo -lportaudio
+
+at:
+	gcc -o bin/at src/attenuator.c -Wall -Wextra
