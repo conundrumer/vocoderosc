@@ -15,7 +15,6 @@ void* vd_new(void (*callback)(float volume, void* params), void* callbackparams)
 }
 
 float vd_findVolume(float input, int i, int bufLength, void* data) {
-	
 	Vd* v = (Vd*) data;
 	return v->avg;
 }
