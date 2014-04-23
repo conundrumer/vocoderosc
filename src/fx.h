@@ -6,7 +6,8 @@
  * and audio effect data (eg parameters), and returns the output of the effect.
  */
 typedef float (*AudioFx)(float input, int i, int bufLength, void* fxData);
-
+// takes fxdata and frees it
+typedef void (*FreeFx)(void* fxData);
 /**
  * Fx:
  * An audio effect psuedo-class, containing the function that processses the
@@ -14,6 +15,7 @@ typedef float (*AudioFx)(float input, int i, int bufLength, void* fxData);
  */
 typedef struct {
     AudioFx audioFx;
+    FreeFx freeFx;
     void* fxData;
 } Fx;
 
@@ -21,7 +23,7 @@ typedef struct {
  * fx_new: allocates and returns a new Fx,
  * assuming fxData has already been allocated/initialized
  */
-Fx* fx_new(AudioFx audioFx, void* fxData);
+Fx* fx_new(AudioFx audioFx, FreeFx freeFx, void* fxData);
 
 /**
  * fx_process: returns the output of audio effects processing
@@ -29,6 +31,6 @@ Fx* fx_new(AudioFx audioFx, void* fxData);
 float fx_process(Fx* fx, float input, int i, int bufLength);
 
 /**
- * fx_free: frees fx and uses fxData_free to free fxData
+ * fx_free: frees fx
  */
-void fx_free(Fx* fx, void (*fxData_free)(void* fxData));
+void fx_free(Fx* fx);
