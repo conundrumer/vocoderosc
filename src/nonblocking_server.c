@@ -19,13 +19,15 @@ int done = 0;
 
 void error(int num, const char *m, const char *path);
 
+void read_stdin(Synth* s);
+
 int keyboard_handler(const char *path, const char *types, lo_arg ** argv,
                 int argc, void *data, void *user_data);
 
 int push_handler(const char *path, const char *types, lo_arg ** argv,
                 int argc, void *data, void *user_data);
 
-int runServer(Synth* synth) {
+int startLO(Synth* synth) {
     int lo_fd;
     fd_set rfds;
 #ifndef WIN32
@@ -65,8 +67,16 @@ int runServer(Synth* synth) {
             if (retval == -1) {
                 printf("select() error\n");
                 exit(1);
-            } else if (retval > 0 && FD_ISSET(lo_fd, &rfds)) {
-                lo_server_recv_noblock(s, 0);
+            // } else if (retval > 0 && FD_ISSET(lo_fd, &rfds)) {
+            //     lo_server_recv_noblock(s, 0);
+            // }
+            } else if (retval > 0) {
+                if (FD_ISSET(0, &rfds)) {
+                    read_stdin(synth);
+                }
+                if (FD_ISSET(lo_fd, &rfds)) {
+                    lo_server_recv_noblock(s, 0);
+                }
             }
         } while (!done);
     } else {
@@ -88,6 +98,8 @@ int runServer(Synth* synth) {
             if (retval == -1) {
                 printf("select() error\n");
                 exit(1);
+            } else if (retval > 0 && FD_ISSET(0, &rfds)) {
+                read_stdin(synth);
             }
             lo_server_recv_noblock(s, 0);
         } while (!done);
@@ -106,8 +118,6 @@ int push_handler(const char *path, const char *types, lo_arg ** argv,
     strncpy(keystr, path+7, strlen(path)-7);
     int key = atoi(keystr);
     int note_on = argv[0]->i;
-    // printf("key: %d\n",key);
-    // printf("note_on: %d\n\n", note_on);
     fflush(stdout);
     Synth* synth = (Synth*) user_data;
     if (note_on) {
@@ -115,7 +125,7 @@ int push_handler(const char *path, const char *types, lo_arg ** argv,
     } else {
         synth_off(key, synth);
     }
-    // free(keystr);
+    free(keystr);
     return 0;
 }
 
@@ -142,6 +152,14 @@ int keyboard_handler(const char *path, const char *types, lo_arg ** argv,
 void error(int num, const char *msg, const char *path) {
     printf("liblo server error %d in path %s: %s\n", num, path, msg);
 }
+
+void read_stdin(Synth* synth) {
+    int input = getc(stdin);
+    if (input==32) {
+        synth_allOff(synth);
+    }
+}
+
 
 /* vi:set ts=8 sts=4 sw=4: */
 

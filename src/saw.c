@@ -32,7 +32,6 @@ float saw_getNext(Saw* saw) {
 		float period = (saw->fs)/(F0*powf(2.0,((float)(saw->key)-K0)/NUM_KEYS));
 		float slope = 2.0/period;
 		saw->currentSample += slope;
-		// printf("key: %d\nperiod: %f\nslope: %f\ncurrentSample: %f\n\n",saw->key, period, slope, saw->currentSample);
 		// Drop to -1.0 when signal reaches 1.0
 		if (saw->currentSample > 1.0f) {
 			saw->currentSample -= 2.0f;
@@ -42,9 +41,9 @@ float saw_getNext(Saw* saw) {
 	return saw->currentSample;
 }
 
-// void saw_free(Saw* saw) {
-// 	free(saw);
-// }
+void saw_free(Saw* saw) {
+	free(saw);
+}
 
 // int main(void) {
 // 	Saw* s = saw_new(44100);

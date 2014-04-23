@@ -27,6 +27,11 @@ void synth_on(int key, Synth* s);
 void synth_off(int key, Synth* s);
 
 /**
+ * synth_allOff(Synth* s): turns off all saws of the synth
+ */
+ void synth_allOff(Synth* s);
+
+/**
  * synth_getBuffer:
  * given synth data, get a buffer of the waveform of length bufLength
  */

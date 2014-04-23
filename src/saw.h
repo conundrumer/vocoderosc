@@ -32,4 +32,13 @@ void saw_on(int key, Saw* saw);
  */
 void saw_off(Saw* saw);
 
+/**
+ * saw_free: frees memory allocated for the saw
+ */
+ void saw_free(Saw* saw);
+
+/**
+ * saw_getNext: calculates and returns the next sample. updates
+ *              currentSample
+ */
 float saw_getNext(Saw* saw);

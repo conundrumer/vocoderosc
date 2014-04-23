@@ -34,10 +34,12 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
 }
 
 /*******************************************************************/
-int runPA(Synth* synth);
-int runPA(Synth* synth) {
-    PaStream *stream;
-    PaError err;
+PaStream *stream;
+PaError err;
+int openPA(Synth* synth);
+int closePA();
+
+int openPA(Synth* synth) {
 
     printf("PortAudio Test: output sawtooth wave.\n");
 
@@ -59,20 +61,32 @@ int runPA(Synth* synth) {
     err = Pa_StartStream( stream );
     if( err != paNoError ) goto error;
 
-    // move me
-    /* Start listening for TouchOSC messages */
-    runServer(synth);
+    return err;
 
-    /* Sleep for several seconds. */
-    Pa_Sleep(NUM_SECONDS*1000);
+error:
+    Pa_Terminate();
+    fprintf( stderr, "An error occured while using the portaudio stream\n" );
+    fprintf( stderr, "Error number: %d\n", err );
+    fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
+    return err;
+}
 
+int closePA() {
+// end:
+    /* Stop playback */
     err = Pa_StopStream( stream );
     if( err != paNoError ) goto error;
+    
+    /* Close the stream */
     err = Pa_CloseStream( stream );
     if( err != paNoError ) goto error;
-    Pa_Terminate();
-    printf("Test finished.\n");
+    
+    /* Terminate PortAudio */
+    err = Pa_Terminate();
+    if( err != paNoError ) goto error;
+    printf("PortAudio terminated.\n");
     return err;
+
 error:
     Pa_Terminate();
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
