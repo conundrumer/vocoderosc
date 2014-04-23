@@ -11,11 +11,11 @@
 ** It may called at interrupt level on some machines so don't do anything
 ** that could mess up the system like calling malloc() or free().
 */
-static int patestCallback( const void *inputBuffer, void *outputBuffer,
-                           unsigned long framesPerBuffer,
-                           const PaStreamCallbackTimeInfo* timeInfo,
-                           PaStreamCallbackFlags statusFlags,
-                           void *userData )
+static int paCallback( const void *inputBuffer, void *outputBuffer,
+                       unsigned long framesPerBuffer,
+                       const PaStreamCallbackTimeInfo* timeInfo,
+                       PaStreamCallbackFlags statusFlags,
+                       void *userData )
 {
     (void) inputBuffer;    
     (void) timeInfo;
@@ -54,7 +54,7 @@ int openPA(Synth* synth) {
                                 paFloat32,  /* 32 bit floating point output */
                                 SAMPLE_RATE,
                                 256,        /* frames per buffer */
-                                patestCallback,
+                                paCallback,
                                 synth );
     if( err != paNoError ) goto error;
 

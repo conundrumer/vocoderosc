@@ -4,8 +4,8 @@ fx_example:
 nbs:
 	gcc -o bin/nbs -Wall -Wextra src/nonblocking_server.c src/synth.c src/saw.c src/utils.c -llo
 
-pasynth:
-	gcc -o bin/pasynth -Wall -Wextra src/pasynth.c src/synth.c src/saw.c src/nonblocking_server.c src/utils.c -llo -lportaudio
+stream:
+	gcc -o bin/stream -Wall -Wextra src/stream.c src/synth.c src/saw.c src/nonblocking_server.c src/utils.c -llo -lportaudio
 
 saw:
 	gcc -o bin/saw -Wall -Wextra src/saw.c src/utils.c -llo -lm
@@ -14,7 +14,7 @@ synth:
 	gcc -o bin/synth -Wall -Wextra src/synth.c src/saw.c src/utils.c -llo -lm
 
 synthserv:
-	gcc -o bin/synthserv -Wall -Wextra src/synthserv.c src/synth.c src/pasynth.c src/nonblocking_server.c src/utils.c src/saw.c -llo -lportaudio
+	gcc -o bin/synthserv -Wall -Wextra src/synthserv.c src/synth.c src/stream.c src/nonblocking_server.c src/utils.c src/saw.c -llo -lportaudio
 
 at:
 	gcc -o bin/at src/attenuator.c -Wall -Wextra -lm
