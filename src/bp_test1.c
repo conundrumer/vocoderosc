@@ -3,9 +3,13 @@
 #include <math.h>
 #include "fx.h"
 #include "bandpass.h"
+#include "utils.h"
 
 int main() {
-    Fx* fx = fx_new(bp_filter, bp_new(1.0/6.0, 0.066*2.0, 1));
+    int fs = 4;
+    float freq = 1.0;
+    float bw = 0.2;
+    Fx* fx = fx_new(bp_filter, bp_new(freq, bw, fs));
     float impulse = 1.0;
     int i;
     printf("Testing impulse response...\n");
@@ -16,7 +20,7 @@ int main() {
     }
     printf("Testing resonance...\n");
     for (i = 0; i < 300; i++) {
-        float input = sin(M_PI/3.0*(float)i);
+        float input = sin(freqtoang(freq,fs)*(float)i);
         float output = fx_process(fx, input, 0, 1);
         if (i > 290) {
             printf("%f\t%f\n", input, output);
@@ -25,7 +29,7 @@ int main() {
 
     printf("Testing band edge...\n");
     for (i = 0; i < 300; i++) {
-        float input = sin(M_PI*(1.0/3.0+0.066)*(float)i);
+        float input = sin(freqtoang(freq+bw/2.0,fs)*(float)i);
         float output = fx_process(fx, input, 0, 1);
         if (i > 290) {
             printf("%f\t%f\n", input, output);
