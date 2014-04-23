@@ -14,18 +14,21 @@ void* vd_new(void (*callback)(float, void*), void* callbackparams) {
 	v->callbackparams = callbackparams;
 	return (void*)v;
 }
-// for (int i = 0; i < bufLength; i++) {
-//     float input = buffer[i];
+
 float vd_findVolume(float input, int i, int bufLength, void* data) {
 	Vd* v = (Vd*) data;
-	v->avg += (input * input) / (float)(bufLength);
 	if(i == bufLength){
 		v->callback(v->avg, v->callbackparams);
 		v->avg = 0;
 	}
+	else if (i < bufLength) {
+		// printf("before = %f\n", v->avg);
+		// printf("input = %f\n", input);
+		v->avg += (input * input) / (float)(bufLength);
+		// printf("after = %f\n", v->avg);	
+	}
 	return v->avg;
 }
-// }
 
 void vd_free(void* data) {
 	Vd* v = (Vd*) data;
@@ -33,14 +36,23 @@ void vd_free(void* data) {
 	free (v);
 }
 
-void callback(float volume, void* params) {
-	printf("%f", volume);
-}
+// Testing
 
-/*
+// void callback(float volume, void* params) {
+// 	printf("volume = %f\n", volume);
+// }
+
+
+// int main() {
+// 	void* params;
+// 	void* v = vd_new(callback, params);
+// 	for (int i = 0; i <= 10; i++) {
+// 		float f = 1.0 / (i+1);
+// 		vd_findVolume(f, i, 10, v);		
+// 	}
+// 	return 1;
+// }
+
 int main() {
-	Vd* v = (Vd*) vd_new(callback, []);
-	vd_findVolume(0.5, 0, 1, v);
-	return 1;
+	return 0;
 }
-*?
