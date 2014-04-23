@@ -3,6 +3,7 @@
 #include "portaudio.h"
 #include "synth.h"
 #define NUM_VOICES    (12)
+#define NUM_VOICES_KEYBOARD (49)
 #define NUM_SECONDS   (4)
 #define SAMPLE_RATE   (44100)
 
@@ -16,31 +17,29 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
                            PaStreamCallbackFlags statusFlags,
                            void *userData )
 {
+    (void) inputBuffer;    
+    (void) timeInfo;
+    (void) statusFlags;
 
     /* Cast data passed through stream to Synth. */
     Synth *synth = (Synth*)userData;
     float *out = (float*)outputBuffer;
-    (void) inputBuffer; /* Prevent unused variable warning. */
-
     float* synthBuffer = synth_getBuffer(framesPerBuffer, synth);
     unsigned int i;
-    for( i=0; i<framesPerBuffer; i++ ) {
+    for(i = 0; i<framesPerBuffer; i++) {
         *out++ = synthBuffer[i];
         *out++ = synthBuffer[i];
-        // printf("out: %f\n\n", synthBuffer[i]);
     }
     return 0;
 }
 
 /*******************************************************************/
-int main(void);
-int main(void) {
+int runPA(Synth* synth);
+int runPA(Synth* synth) {
     PaStream *stream;
     PaError err;
 
     printf("PortAudio Test: output sawtooth wave.\n");
-    /* Initialize our data for use by callback. */
-    Synth* synth = synth_new(SAMPLE_RATE, NUM_VOICES);
 
     /* Initialize library before making any other calls. */
     err = Pa_Initialize();
@@ -60,6 +59,7 @@ int main(void) {
     err = Pa_StartStream( stream );
     if( err != paNoError ) goto error;
 
+    // move me
     /* Start listening for TouchOSC messages */
     runServer(synth);
 
