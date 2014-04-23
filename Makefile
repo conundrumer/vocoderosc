@@ -6,3 +6,6 @@ nbs:
 
 pasynth:
 	gcc -o bin/pasynth -Wall -Wextra src/pasynth.c src/synth.c src/saw.c src/nonblocking_server.c -llo -lportaudio
+
+saw:
+	gcc -o bin/saw -Wall -Wextra src/saw.c -llo -lm

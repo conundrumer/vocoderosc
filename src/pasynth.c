@@ -3,6 +3,7 @@
 #include "portaudio.h"
 #include "synth.h"
 #define NUM_VOICES    (12)
+#define NUM_VOICES_KEYBOARD (49)
 #define NUM_SECONDS   (4)
 #define SAMPLE_RATE   (44100)
 
@@ -24,7 +25,7 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
 
     float* synthBuffer = synth_getBuffer(framesPerBuffer, synth);
     unsigned int i;
-    for( i=0; i<framesPerBuffer; i++ ) {
+    for( i = 0; i<framesPerBuffer; i++ ) {
         *out++ = synthBuffer[i];
         *out++ = synthBuffer[i];
         // printf("out: %f\n\n", synthBuffer[i]);
@@ -60,6 +61,7 @@ int main(void) {
     err = Pa_StartStream( stream );
     if( err != paNoError ) goto error;
 
+    // move me
     /* Start listening for TouchOSC messages */
     runServer(synth);
 

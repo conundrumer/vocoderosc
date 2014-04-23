@@ -19,6 +19,9 @@ int done = 0;
 
 void error(int num, const char *m, const char *path);
 
+int keyboard_handler(const char *path, const char *types, lo_arg ** argv,
+                int argc, void *data, void *user_data);
+
 int push_handler(const char *path, const char *types, lo_arg ** argv,
                 int argc, void *data, void *user_data);
 
@@ -42,6 +45,8 @@ int runServer(Synth* synth) {
         lo_server_add_method(s, path, "i", push_handler, synth);
     }
 
+    lo_server_add_method(s, "/keyboard","ii", keyboard_handler, synth);
+
     /* get the file descriptor of the server socket, if supported */
     lo_fd = lo_server_get_socket_fd(s);
 
@@ -49,7 +54,6 @@ int runServer(Synth* synth) {
         /* select() on lo_server fd is supported, so we'll use select()
          * to watch both stdin and the lo_server fd. */
         do {
-
             FD_ZERO(&rfds);
 #ifndef WIN32
             FD_SET(0, &rfds);   /* stdin */
@@ -64,11 +68,8 @@ int runServer(Synth* synth) {
             } else if (retval > 0 && FD_ISSET(lo_fd, &rfds)) {
                 lo_server_recv_noblock(s, 0);
             }
-
         } while (!done);
-
     } else {
-
         /* lo_server protocol does not support select(), so we'll watch
          * stdin while polling the lo_server. */
 #ifdef WIN32
@@ -77,21 +78,18 @@ int runServer(Synth* synth) {
         exit(1);
 #else
         do {
-
             FD_ZERO(&rfds);
             FD_SET(0, &rfds);
             tv.tv_sec = 0;
             tv.tv_usec = 10000;
 
             retval = select(1, &rfds, NULL, NULL, &tv); /* timeout every 10ms */
-
+            
             if (retval == -1) {
                 printf("select() error\n");
                 exit(1);
             }
-
             lo_server_recv_noblock(s, 0);
-
         } while (!done);
 #endif
     }
@@ -115,6 +113,20 @@ int push_handler(const char *path, const char *types, lo_arg ** argv,
         synth_off(key, synth);
     }
     return 0;
+}
+
+int keyboard_handler(const char *path, const char *types, lo_arg ** argv,
+                     int argc, void *data, void *user_data) {
+    
+    Synth* synth = (Synth*) user_data;
+    int key = argv[0]->i;
+    printf("key: %d\n", key);
+    int note_on = argv[1]->i;
+    if (note_on) {
+        synth_on(key, synth);
+    } else {
+        synth_off(key, synth);
+    }
 }
 
 void error(int num, const char *msg, const char *path) {
