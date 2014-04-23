@@ -30,9 +30,9 @@ int push_handler(const char *path, const char *types, lo_arg ** argv,
 int startLO(Synth* synth) {
     int lo_fd;
     fd_set rfds;
-#ifndef WIN32
+    #ifndef WIN32
     struct timeval tv;
-#endif
+    #endif
     int retval;
 
     /* start a new server on port 7770 */
@@ -103,7 +103,7 @@ int startLO(Synth* synth) {
             }
             lo_server_recv_noblock(s, 0);
         } while (!done);
-#endif
+        #endif
     }
     return 0;
 }
@@ -113,6 +113,7 @@ int push_handler(const char *path, const char *types, lo_arg ** argv,
     (void) types;
     (void) argc;
     (void) data;
+    printf("whee\n");
 
     char *keystr = (char*) malloc(2);
     strncpy(keystr, path+7, strlen(path)-7);
@@ -157,9 +158,10 @@ void read_stdin(Synth* synth) {
     int input = getc(stdin);
     if (input==32) {
         synth_allOff(synth);
+    } else {
+        printf("stdin: %d\n",input);
     }
 }
-
 
 /* vi:set ts=8 sts=4 sw=4: */
 
@@ -172,7 +174,8 @@ void read_stdin(Synth* synth) {
 //     int retval;
 
 //     Synth* synth = synth_new(44100,12);
-
+//     printf("Initialized synth\n");
+    
 //     /* start a new server on port 7770 */
 //     lo_server s = lo_server_new("7770", error);
 //     printf("Now listening on port 7770\n");
@@ -205,8 +208,16 @@ void read_stdin(Synth* synth) {
 //             if (retval == -1) {
 //                 printf("select() error\n");
 //                 exit(1);
-//             } else if (retval > 0 && FD_ISSET(lo_fd, &rfds)) {
-//                 lo_server_recv_noblock(s, 0);
+//             // } else if (retval > 0 && FD_ISSET(lo_fd, &rfds)) {
+//             //     lo_server_recv_noblock(s, 0);
+//             // }
+//             } else if (retval > 0) {
+//                 if (FD_ISSET(0, &rfds)) {
+//                     read_stdin(synth);
+//                 }
+//                 if (FD_ISSET(lo_fd, &rfds)) {
+//                     lo_server_recv_noblock(s, 0);
+//                 }
 //             }
 //         } while (!done);
 //     } else {
@@ -228,6 +239,8 @@ void read_stdin(Synth* synth) {
 //             if (retval == -1) {
 //                 printf("select() error\n");
 //                 exit(1);
+//             } else if (retval > 0 && FD_ISSET(0, &rfds)) {
+//                 read_stdin(synth);
 //             }
 //             lo_server_recv_noblock(s, 0);
 //         } while (!done);

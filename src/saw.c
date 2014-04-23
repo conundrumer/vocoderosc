@@ -1,7 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "saw.h"
+#include "utils.h"
 #include <math.h>
+
 #define F0 (100.0)
 #define K0 (1)
 #define NUM_KEYS (12)
@@ -29,7 +31,8 @@ void saw_off(Saw* saw) {
 
 float saw_getNext(Saw* saw) {
 	if (saw->key > -1) {
-		float period = (saw->fs)/(F0*powf(2.0,((float)(saw->key)-K0)/NUM_KEYS));
+		// float period = (saw->fs)/(F0*powf(2.0,((float)(saw->key)-K0)/NUM_KEYS));
+		float period = getPeriod(saw->fs, saw->key, F0, K0, NUM_KEYS);
 		float slope = 2.0/period;
 		saw->currentSample += slope;
 		// Drop to -1.0 when signal reaches 1.0
@@ -47,12 +50,7 @@ void saw_free(Saw* saw) {
 
 // int main(void) {
 // 	Saw* s = saw_new(44100);
-
-// 	s->key = 12;
-// 	int i;
-// 	for (i = 0; i < 256; i++) {
-// 		float f = saw_getNext(s);
-
-// 	}
+// 	printf("%f\n",saw_getNext(s));
+// 	saw_free(s);
 // 	return 0;
 // }

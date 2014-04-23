@@ -1,7 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "synth.h"
-#include "math.h"
+#include <math.h>
+#include "utils.h"
 
 void printChart(Synth* s);
 

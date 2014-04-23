@@ -94,3 +94,11 @@ error:
     fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
     return err;
 }
+
+// int main() {
+//     Synth* s = synth_new(44100,12);
+//     int err = openPA(s);
+//     err = closePA();
+//     synth_free(s);
+//     return err;
+// }
