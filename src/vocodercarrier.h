@@ -2,13 +2,6 @@
 
 #include "fx.h"
 
-typedef struct{
-	float f_low;
-	float f_high;
-	int numBands;
-	int fs;
-} Vcc;
-
 // frequency range from f_low to f_high
 // in numBands bands of constant q
 // ie logarithmically spaced
@@ -19,4 +12,4 @@ float vcc_filter(float input, int i, int bufLength, void* data);
 void vcc_free(void* data);
 
 // VdCallback for vocodermodulator, bandVolume is BandVolume*
-void vcc_setBandVolume(float volume, void* bandVolume);
+void vcc_setBandVolume(float volume, void* band, void* data);
