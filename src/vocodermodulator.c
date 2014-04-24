@@ -1,9 +1,9 @@
 #include <stdlib.h>
-#include "vocodermodulator.h"
-#include "fx.h"
-#include "volumedetector.h"
-#include "fx_multiband.h"
-#include "bandvolume.h"
+#include "../headers/vocodermodulator.h"
+#include "../headers/fx.h"
+#include "../headers/volumedetector.h"
+#include "../headers/fx_multiband.h"
+#include "../headers/bandvolume.h"
 
 typedef struct {
 	int numBands; 

@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <math.h>
-#include "fx_multiband.h"
-#include "bandpass.h"
-#include "fx.h"
+#include "../headers/fx_multiband.h"
+#include "../headers/bandpass.h"
+#include "../headers/fx.h"
 
 typedef struct {
 	int numBands;

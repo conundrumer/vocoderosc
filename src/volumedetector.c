@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "volumedetector.h"
+#include "../headers/volumedetector.h"
 
 typedef struct {
 	VdCallback callback;

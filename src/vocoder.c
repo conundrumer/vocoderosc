@@ -1,7 +1,7 @@
 #include <stdlib.h>
-#include "vocoder.h"
-#include "vocodercarrier.h"
-#include "vocodermodulator.c"
+#include "../headers/vocoder.h"
+#include "../headers/vocodercarrier.h"
+#include "../headers/vocodermodulator.h"
 
 Vocoder* vc_new(float f_low, float f_high, int numBands, int fs) {
 	Vocoder* vc = malloc(sizeof(Vocoder));

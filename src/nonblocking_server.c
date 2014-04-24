@@ -5,7 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "lo/lo.h"
-#include "synth.h"
+#include "../headers/synth.h"
 
 #define NUM_KEYS (12)
 

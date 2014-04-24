@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <math.h>
 #include "portaudio.h"
-#include "synth.h"
-#include "attenuator.h"
+#include "../headers/synth.h"
+#include "../headers/attenuator.h"
 
 #define NUM_VOICES    (12)
 #define NUM_SECONDS   (4)

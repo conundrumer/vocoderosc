@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <math.h>
 #include "portaudio.h"
-#include "synth.h"
-#include "vocoder.h"
+#include "../headers/synth.h"
+#include "../headers/vocoder.h"
 
 #define FRAMES_PER_BUFFER   (64)
 #define NUM_CHANNELS        (1)

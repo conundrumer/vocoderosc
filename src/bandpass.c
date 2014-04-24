@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "bandpass.h"
-#include "utils.h"
+#include "../headers/bandpass.h"
+#include "../headers/utils.h"
 
 #define POLES 2
 

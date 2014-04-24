@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include "saw.h"
-#include "utils.h"
+#include "../headers/saw.h"
+#include "../headers/utils.h"
 
 #define F0 (100.0)
 #define K0 (1)

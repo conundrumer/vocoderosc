@@ -1,5 +1,5 @@
 test:
-	gcc -o bin/test -Wall -Wextra src/synthserv.c src/synth.c src/stream.c src/nonblocking_server.c src/utils.c src/saw.c src/vocoder.c src/fx_multiband.c src/fx.c src/volumedetector.c src/vocodercarrier.c src/attenuator.c src/bandpass.c -llo -lportaudio
+	gcc -o bin/test -Wall -Wextra src/* -llo -lportaudio
 
 at_test:
 	gcc -o bin/at_test -Wall -Wextra tests/at_test.c src/attenuator.c -lm

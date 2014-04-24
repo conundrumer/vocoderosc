@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "fx.h"
+#include "../headers/fx.h"
 
 Fx* fx_new(AudioFx audioFx, FreeFx freeFx, void* fxData) {
     Fx* fx      = malloc(sizeof(Fx));

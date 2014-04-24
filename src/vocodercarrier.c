@@ -1,8 +1,8 @@
 #include <stdlib.h>
-#include "vocodercarrier.h"
-#include "bandvolume.h"
-#include "attenuator.h"
-#include "fx_multiband.h"
+#include "../headers/vocodercarrier.h"
+#include "../headers/bandvolume.h"
+#include "../headers/attenuator.h"
+#include "../headers/fx_multiband.h"
 
 typedef struct {
 	int    numBands;

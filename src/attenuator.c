@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include "attenuator.h"
+#include "../headers/attenuator.h"
 
 typedef struct {
 	float attack;
