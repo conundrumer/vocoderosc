@@ -11,7 +11,7 @@ void* at_new(float attack, float decay);
  */
 float at_filter(float input, int i, int bufLength, void* data);
 
-void at_free(void* data);
-
 /* changes the gain of the attenuator */
 void at_setGain(float gain, void* data);
+
+void at_free(void* data);

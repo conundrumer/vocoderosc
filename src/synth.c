@@ -1,18 +1,18 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "synth.h"
 #include <math.h>
+#include "synth.h"
 #include "utils.h"
 
 void printChart(Synth* s);
 
 Synth* synth_new(int fs, int numvoices) {
 	Synth* synth = malloc(sizeof(Synth));
-	synth->poly = numvoices;
-	synth->saws = malloc(numvoices*sizeof(Saw*));
+	synth->saws  = malloc(numvoices*sizeof(Saw*));
+	synth->poly  = numvoices;
 	int i;
 	for (i = 0; i < numvoices; i++) {
-		Saw* s_i = saw_new(fs);
+		Saw* s_i       = saw_new(fs);
 		synth->saws[i] = s_i;
 	}
 	return synth;
@@ -24,9 +24,6 @@ void synth_on(int key, Synth* s) {
 	for (i = 0; i < s->poly; i++) {
 		if (check_key(-1, saws[i])) { // this saw is not active
 			saw_on(key, saws[i]);
-			// printf("%d -> %d    %d\n", i, key, 1);
-			// printf("Key: %d    Saw: %d    ON\n", key, i);
-			// return;
 			printChart(s);
 			return;
 		}
@@ -42,8 +39,6 @@ void synth_off(int key, Synth* s) {
 	for (i = 0; i < s->poly; i++) {
 		if (check_key(key, saws[i])) {
 			saw_off(saws[i]);
-			// printf("%d -> %d    %d\n", i, key, 0);
-			// printf("Key: %d    Saw: %d    OFF\n", key, i);
 			printChart(s);
 			return;
 		}
@@ -91,25 +86,3 @@ void printChart(Synth* s) {
 	}
 	printf("\n");
 }
-
-// int main() {
-// 	Synth* s = synth_new(44100, 12);
-// 	int i;
-// 	for (i = 1; i <= 12; i++) {
-// 		synth_on(i,s);
-// 	}
-// 	for (i = 1; i <= 12; i++) {
-// 		synth_on(i,s);
-// 	}
-// 	for (i = 1; i <= 12; i++) {
-// 		synth_off(i,s);
-// 	}
-// 	for (i = 1; i <= 12; i++) {
-// 		synth_off(i,s);
-// 	}
-// 	for (i = 1; i <= 12; i++) {
-// 		synth_on(i,s);
-// 		synth_off(i,s);
-// 	}
-// 	return 0;
-// }

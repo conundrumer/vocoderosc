@@ -8,9 +8,9 @@ typedef struct {
 } Vd;
 
 void* vd_new(VdCallback callback, void* callbackparams) {
-	Vd* v = malloc(sizeof(Vd));
-	v->avg = 0;
-	v->callback = callback;
+	Vd* v             = malloc(sizeof(Vd));
+	v->avg            = 0;
+	v->callback       = callback;
 	v->callbackparams = callbackparams;
 	return (void*)v;
 }
@@ -35,20 +35,3 @@ void vd_free(void* data) {
 	free(v->callbackparams);
 	free (v);
 }
-
-// Testing
-
-// void callback(float volume, void* params) {
-// 	printf("volume = %f\n", volume);
-// }
-
-
-// int main() {
-// 	void* params;
-// 	void* v = vd_new(callback, params);
-// 	for (int i = 0; i <= 10; i++) {
-// 		float f = 1.0 / (i+1);
-// 		vd_findVolume(f, i, 10, v);		
-// 	}
-// 	return 1;
-// }

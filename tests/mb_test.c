@@ -1,12 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include "fx_multiband.h"
-#include "utils.h"
+#include "../src/fx_multiband.h"
+#include "../src/utils.h"
 
 int main() {
-	int fs = 20;
-	float f_low = 2.0;
+	int fs       = 20;
+	float f_low  = 2.0;
 	float f_high = 8.0;
 	int numBands = 10;
 	Fx* fx = fx_new(mb_filter, mb_free, mb_new(f_low, f_high, numBands, fs));
