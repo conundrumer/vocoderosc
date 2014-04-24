@@ -15,6 +15,8 @@ void startLO(Synth* synth);
 int main();
 int main() {
 	Synth* synth = synth_new(SAMPLE_RATE, NUM_VOICES);
+	
+
 	if (openPA(synth) == 0) {
 		printf("starting LO server\n");
 		startLO(synth);
