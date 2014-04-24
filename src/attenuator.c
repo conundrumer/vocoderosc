@@ -65,14 +65,20 @@ void at_setGain(float gain, void* data) {
 // 		sintable[i]=prev;
 // 		// printf("%d\t%f\t%f\n",i,x,sintable[i]);
 // 	}
-
-// 	At* at = at_new(0.25, 0.75);
+// 	float* ones = malloc(buflength*sizeof(float));
+// 	for (i = 0; i < buflength; i++) {
+// 		ones[i] =1.0;
+// 	}
+// 	At* at = at_new(1.0, 1.0);
 // 	at_setGain(8.0,(void*)at);
 // 	float filtered;
 // 	printf("\ngain = 8.0\n......................................\ni\torig\t\tnew\n......................................\n");
 // 	for (i = 0; i < buflength; i++) {
-// 		filtered = at_filter(sintable[i],i,buflength,at);
-// 		printf("%d\t%f\t%f\n",i,sintable[i],filtered);
+// 		filtered = at_filter(ones[i], i, buflength, at);
+// 		// filtered = at_filter(sintable[i],i,buflength,at);
+// 		// printf("%d\t%f\t%f\n",i,sintable[i],filtered);
+// 		printf("%d\t%f\t%f\n",i,ones[i],filtered);
+
 // 	}
 // 	return 0;
 // }

@@ -2,6 +2,7 @@
 #include <math.h>
 #include "portaudio.h"
 #include "synth.h"
+#include "vocoder.h"
 #define NUM_VOICES    (12)
 #define NUM_VOICES_KEYBOARD (49)
 #define NUM_CHANNELS (2)
@@ -9,6 +10,9 @@
 #define SAMPLE_RATE   (44100)
 #define FRAMES_PER_BUFFER (64)
 #define FORMAT paFloat32
+#define F_LO (100)
+#define F_HI (4000)
+#define NUM_BANDS (5)
 
 /* This routine will be called by the PortAudio engine when audio is needed.
 ** It may called at interrupt level on some machines so don't do anything
@@ -27,6 +31,8 @@ static int paCallback( const void    *inputBuffer,
     unsigned int i;
     /* Cast data passed through stream to Synth. */
     Synth *synth = (Synth*)userData;
+    Vocoder* vc = vc_new(F_LO, F_HI, NUM_BANDS, SAMPLE_RATE)
+
     const float *in = (const float*)inputBuffer;
     float *out = (float*)outputBuffer;
     float* synthBuffer = synth_getBuffer(framesPerBuffer, synth);
@@ -36,8 +42,10 @@ static int paCallback( const void    *inputBuffer,
     }
     else {
         for(i = 0; i<framesPerBuffer; i++) {
-            *out++ = (*in++) + synthBuffer[i];
-            *out++ = (*in++) + synthBuffer[i];
+            *out++ = vc_process(*in++, synthBuffer[i], i, framesPerBuffer, vc);
+            *out++ = vc_process(*in++, synthBuffer[i], i, framesPerBuffer, vc);
+            // *out++ = (*in++) + synthBuffer[i];
+            // *out++ = (*in++) + synthBuffer[i];
         }
     }
     return 0;
