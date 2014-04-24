@@ -6,10 +6,10 @@
  * (from {-1U[1,12]}, where -1 means the inactive), and period.
 */
 typedef struct {
-	int fs;
-	int key; // -1 means off
-	int period;
-	float currentSample;
+    int fs;
+    int key; // -1 means off
+    int period;
+    float currentSample;
 } Saw;
 
 /**

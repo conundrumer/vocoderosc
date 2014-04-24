@@ -5,8 +5,8 @@
  * Synth: Contains the number of and array of saw waves for use
  */
 typedef struct {
-	int poly; // # of voices
-	Saw** saws;
+    int poly; // # of voices
+    Saw** saws;
 } Synth;
 
 /** 

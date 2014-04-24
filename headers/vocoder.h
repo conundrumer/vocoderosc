@@ -2,8 +2,8 @@
 #include "fx.h"
 
 typedef struct {
-	Fx* vcm;
-	Fx* vcc;
+    Fx* vcm;
+    Fx* vcc;
 } Vocoder;
 
 Vocoder* vc_new(float f_low, float f_high, int numBands, int fs);
