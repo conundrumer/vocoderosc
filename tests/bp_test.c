@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include "../src/fx.h"
-#include "../src/bandpass.h"
-#include "../src/utils.h"
+#include "../headers/fx.h"
+#include "../headers/bandpass.h"
+#include "../headers/utils.h"
 
 int main() {
     int fs = 4;

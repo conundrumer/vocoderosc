@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "../src/fx.h"
+#include "../headers/fx.h"
 
 typedef struct {
     float gain;

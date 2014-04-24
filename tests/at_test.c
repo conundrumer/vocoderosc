@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include "../src/attenuator.h"
+#include "../headers/attenuator.h"
 
 int main() {
     int i;

@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include "../src/fx_multiband.h"
-#include "../src/utils.h"
+#include "../headers/fx_multiband.h"
+#include "../headers/utils.h"
 
 int main() {
 	int fs       = 20;

@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "../src/vocodercarrier.h"
-#include "../src/bandvolume.h"
-#include "../src/attenuator.h"
+#include "../headers/vocodercarrier.h"
+#include "../headers/bandvolume.h"
+#include "../headers/attenuator.h"
 
 int main() {
 	int fs        = 20;

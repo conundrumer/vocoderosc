@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../src/volumedetector.h"
+#include "../headers/volumedetector.h"
 
 void callback(float volume, void* params) {
 	(void) params;

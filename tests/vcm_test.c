@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include "../src/vocodermodulator.h"
-#include "../src/bandvolume.h"
+#include "../headers/vocodermodulator.h"
+#include "../headers/bandvolume.h"
 
 void vd_callback (float volume, void* data) {
 	BandVolume* bv = (BandVolume*) data;
