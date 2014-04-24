@@ -33,3 +33,6 @@ vcc:
 
 vcmtest:
 	gcc -o bin/vcmtest -Wall src/fx.c src/bandpass.c src/volumedetector.c src/utils.c src/fx_multiband.c src/vocodermodulator.c src/vcmtest.c
+
+test:
+	gcc -o bin/test -Wall -Wextra src/synthserv.c src/synth.c src/stream.c src/nonblocking_server.c src/utils.c src/saw.c src/vocoder.c -llo -lportaudio
