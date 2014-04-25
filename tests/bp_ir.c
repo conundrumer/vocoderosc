@@ -7,7 +7,7 @@
 
 #define NUM_FREQS 2
 #define NUM_BW 2
-#define IR_LEN 16
+#define IR_LEN 256
 
 void printIR(float freq, float bw, int fs, int ir_length) {
     Fx* fx = fx_new(bp_filter, bp_free, bp_new(freq, bw, fs));
