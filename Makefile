@@ -36,3 +36,6 @@ vcc_test:
 
 vcm_test:
 	gcc -o bin/vcm_test -Wall tests/vcm_test.c src/fx.c src/bandpass.c src/volumedetector.c src/utils.c src/fx_multiband.c src/vocodermodulator.c -lm
+
+vc_test:
+	gcc -o bin/vc_test -Wall -Wextra tests/vc_test.c src/vocoder.c src/vocodercarrier.c src/attenuator.c src/fx_multiband.c src/bandpass.c src/utils.c src/fx.c src/volumedetector.c src/vocodermodulator.c

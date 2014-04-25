@@ -30,13 +30,14 @@ void* at_new(float attack, float decay) {
  */
 float at_filter(float input, int i, int buflength, void* data) {
     At* at = (At*) data;
-    float slope = (at->gain - at->prevGain)/buflength;
-    if (slope < 0.0) {
-        input = (at->decay * slope * input * i) + at->prevGain;
+    float nextGain;
+    if (at->gain > at->prevGain) {
+        nextGain = (1 - at->attack)*at->gain + at->attack*at->prevGain;
     } else {
-        input = (at->attack * slope * input * i) + at->prevGain;
+        nextGain = (1 - at->decay)*at->gain + at->decay*at->prevGain;;
     }
-    return input;
+    float slope = (nextGain - at->prevGain)/buflength;
+    return slope * input * i;
 }
 
 /* changes the gain of the attenuator */

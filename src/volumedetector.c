@@ -18,6 +18,7 @@ float vd_findVolume(float input, int i, int bufLength, void* data) {
     Vd* v = (Vd*) data;
     if(i == bufLength){
         *(v->vol) = v->avg;
+        printf("%f\n", *(v->vol));
         v->avg = 0.0;
     }
     else if (i < bufLength) {
