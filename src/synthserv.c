@@ -1,23 +1,30 @@
+/* Initializes the synthesizer, opens the PortAudio stream, and starts
+ * the libLO server. */
+
 #include <stdio.h>
 #include <math.h>
 #include "portaudio.h"
 #include "../headers/synth.h"
+#include "../headers/vocoder.h"
 #include "../headers/attenuator.h"
 
 #define NUM_VOICES    (12)
 #define NUM_SECONDS   (4)
+#define NUM_BANDS     (20)
 #define SAMPLE_RATE   (44100)
+#define F_LO          (100)
+#define F_HI		  (4000)
 
 // To stop implicit declaration warnings
-int openPA(Synth* synth);
+int openPA(Synth* synth, Vocoder* vc);
 void startLO(Synth* synth);
-void allOff();
 
 int main();
 int main() {
     Synth* synth = synth_new(SAMPLE_RATE, NUM_VOICES);
-    
-    if (openPA(synth) == 0) {
+    Vocoder* vc = vc_new(F_LO, F_HI, NUM_BANDS, SAMPLE_RATE);
+
+    if (openPA(synth, vc) == 0) {
         printf("Starting LO server...\n");
         startLO(synth);
     }

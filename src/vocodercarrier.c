@@ -3,15 +3,13 @@
 #include "../headers/attenuator.h"
 #include "../headers/fx_multiband.h"
 
-typedef struct {
-    int     numBands;
-    void**  ats;
-    float** vols;
-    Fx*     mb;
-} Vcc;
-
-// Frequency ranges from f_low to f_high in numBands bands of constant q
-// (i.e. logarithmically spaced)
+/**
+ * vcc_new: 
+ * Initializes a new multiband containing attenuators and bandpass filters
+ * for each band. Also sets band volume pointers and the array of ats.
+ * Frequencies range from f_low to f_high in numBands bands of constant q
+ * (i.e. logarithmically spaced).
+ */
 void* vcc_new(float f_low, float f_high, int numBands, int fs) {
     int i;
     Vcc* vcc     = malloc(sizeof(Vcc));
@@ -33,6 +31,11 @@ void* vcc_new(float f_low, float f_high, int numBands, int fs) {
     return (void*) vcc;
 }
 
+/**
+ * vcc_filter: Applies bandpass filters and then attenuates synthesizer
+ *             samples using gains from the previous buffer. Then sets
+ *             attenuator gains to values updated in vcm_filter.
+ */
 float vcc_filter(float input, int i, int bufLength, void* data) {
     (void) i;
     int b;
@@ -51,6 +54,7 @@ float vcc_filter(float input, int i, int bufLength, void* data) {
     return output;
 }
 
+/* vcc_free: Frees the multiband, volume pointers, attenuators, and the vcc */
 void vcc_free(void* data) {
     Vcc* vcc = (Vcc*) data;
     fx_free(vcc->mb);
@@ -64,7 +68,12 @@ void vcc_free(void* data) {
     free(vcc);
 }
 
+/**
+ * vcc_setBandVolumePointer:
+ * Vcc will use the volume at this pointer to set band volumes.
+ */
 void vcc_setBandVolumePointer(int band, float* volume, void* data) {
     Vcc* vcc = (Vcc*) (data);
     vcc->vols[band] = volume;
+
 }
