@@ -39,17 +39,19 @@ static int paCallback( const void    *inputBuffer,
     /* Cast data passed through the stream */
     const float *in = (const float*)inputBuffer;
     float *out      = (float*)outputBuffer;
-    paData* d       = (paData*)userData;
+    paData* data    = (paData*)userData;
 
-    float* synthBuffer = synth_getBuffer(framesPerBuffer, d->synth);
+    float* synthBuffer = synth_getBuffer(framesPerBuffer, data->synth);
     if( inputBuffer == NULL) {
-        *out++ = 0;
-        // *out++ = 0;
+        for (i = 0; i < framesPerBuffer; i++) {
+            *out++ = 0;
+        }
     } else {
         for(i = 0; i < framesPerBuffer; i++) {
-            // *out++ = vc_process(*in++, synthBuffer[i], i, framesPerBuffer, d->vc);
+            // *out++ = vc_process(*in++, synthBuffer[i], i, framesPerBuffer, data->vc);
             // *out++ = (*in++) + synthBuffer[i]; // Output the synth added and input
             *out++ = synthBuffer[i]; // Just output the synthesizer
+            // *out++ = (*in++); // Output the voice input
         }
     }
     return 0;
@@ -68,9 +70,9 @@ int openPA(Synth* synth) {
     PaStreamParameters inputParameters, outputParameters;
     Vocoder* vc = vc_new(F_LO, F_HI, NUM_BANDS, SAMPLE_RATE);
 
-    paData* d = (paData*) malloc(sizeof(paData));
-    d->synth  = synth;
-    d->vc     = vc;
+    paData* data = (paData*) malloc(sizeof(paData));
+    data->synth  = synth;
+    data->vc     = vc;
 
     /* Initialize library before making any other calls. */
     err = Pa_Initialize();
@@ -113,9 +115,9 @@ int openPA(Synth* synth) {
             &outputParameters,
             SAMPLE_RATE,
             FRAMES_PER_BUFFER,
-            0,
+            paClipOff,
             paCallback,
-            d );
+            data );
     if( err != paNoError ) goto error;
 
     err = Pa_StartStream( stream );

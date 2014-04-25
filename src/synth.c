@@ -72,7 +72,7 @@ float* synth_getBuffer(int bufLength, Synth* s) {
         for (j = 0; j < s->poly; j++) {
             sample += saw_getNext(saws[j]);
         }
-        outputBuffer[i] = sample;
+        outputBuffer[i] = sample/(float)s->poly;
     }
     free(outputBuffer);
     return outputBuffer;

@@ -4,7 +4,7 @@
 #include "../headers/saw.h"
 #include "../headers/utils.h"
 
-#define F0 (100.0)
+#define F0 (65.4)
 #define K0 (1)
 #define NUM_KEYS (12)
 
