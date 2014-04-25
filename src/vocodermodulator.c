@@ -12,7 +12,7 @@ typedef struct {
 
 void* vcm_new(float f_low, float f_high, int numBands, int fs) {
     Vcm* vcm       = malloc(sizeof(Vcm));
-    float** vdVols = malloc(numBands*sizeof(float*));
+    vcm->vdVols = malloc(numBands*sizeof(float*));
     vcm->numBands  = numBands;
     void* mb       = mb_new(f_low, f_high, numBands, fs);
     vcm->mb        = fx_new(mb_filter, mb_free, mb);
@@ -20,7 +20,7 @@ void* vcm_new(float f_low, float f_high, int numBands, int fs) {
     for (b = 0; b < numBands; b++) {
         void* rawVd = vd_new();
         mb_addFx(fx_new(vd_findVolume, vd_free, rawVd), b, mb);
-        vdVols[b] = vd_getVolumePointer(rawVd);
+        vcm->vdVols[b] = vd_getVolumePointer(rawVd);
     }
     return (void*) vcm;
 }

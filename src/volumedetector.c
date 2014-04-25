@@ -1,4 +1,4 @@
-#include <stdio.h>
+// #include <stdio.h>
 #include <stdlib.h>
 #include "../headers/volumedetector.h"
 
@@ -19,7 +19,6 @@ float vd_findVolume(float input, int i, int bufLength, void* data) {
     Vd* v = (Vd*) data;
     if(i == bufLength-1){
         *(v->vol) = v->avg;
-        printf("%f\n", *(v->vol));
         v->avg = 0.0;
     }
     else {
