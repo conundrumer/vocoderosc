@@ -25,8 +25,14 @@ vol:
 bp_test1:
 	gcc -o bin/bp_test1 -Wall -Wextra src/fx.c src/bp_test1.c src/bandpass.c src/utils.c
 
+bp_ir:
+	gcc -o bin/bp_ir -Wall -Wextra src/fx.c src/bp_ir.c src/bandpass.c src/utils.c
+
 mb_test1:
 	gcc -o bin/mb_test1 -Wall -Wextra src/fx.c src/mb_test1.c src/bandpass.c src/utils.c src/fx_multiband.c
+
+mb_ir:
+	gcc -o bin/mb_ir -Wall -Wextra src/fx.c src/mb_ir.c src/bandpass.c src/utils.c src/fx_multiband.c
 
 vcc:
 	gcc -o bin/vcc -Wall -Wextra src/vocodercarrier.c src/attenuator.c src/fx_multiband.c src/fx.c src/bandpass.c src/utils.c -lm
