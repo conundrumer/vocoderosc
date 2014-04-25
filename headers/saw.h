@@ -38,7 +38,7 @@ void saw_off(Saw* saw);
  void saw_free(Saw* saw);
 
 /**
- * saw_getNext: calculates and returns the next sample. updates
+ * saw_getNext: calculates and returns the sample. updates
  *              currentSample
  */
 float saw_getNext(Saw* saw);

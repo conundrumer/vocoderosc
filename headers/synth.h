@@ -32,10 +32,10 @@ void synth_off(int key, Synth* s);
  void synth_allOff(Synth* s);
 
 /**
- * synth_getBuffer:
- * given synth data, get a buffer of the waveform of length bufLength
+ * synth_getNext:
+ * given synth data, get the ith sample of the waveform
  */
-float* synth_getBuffer(int bufLength, Synth* s);
+float synth_getNext(Synth* s);
 
 /**
  * synth_free: frees the memory allocated for the synth
