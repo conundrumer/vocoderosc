@@ -50,8 +50,8 @@ static int paCallback( const void    *inputBuffer,
         for(i = 0; i < framesPerBuffer; i++) {
             synthSample = synth_getNext(data->synth);
             *out++ = vc_process(*in++, synthSample, i, framesPerBuffer, data->vc);
-            // *out++ = (*in++) + synthBuffer[i]; // Output the synth added and input
-            // *out++ = synthBuffer[i]; // Just output the synthesizer
+            // *out++ = (*in++) + synthSample; // Output the synth added and input
+            // *out++ = synthSample; // Just output the synthesizer
             // *out++ = (*in++); // Output the voice input
         }
     }
