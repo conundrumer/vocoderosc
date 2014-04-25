@@ -20,7 +20,7 @@ void* vcc_new(float f_low, float f_high, int numBands, int fs) {
     void* rawMb  = mb_new(f_low, f_high, numBands, fs);
     Fx* mb       = fx_new(mb_filter, mb_free, rawMb);
     for (i = 0; i < numBands; i++) {
-        void* rawAt = at_new(0.0, 0.0); 
+        void* rawAt = at_new(0.5, 0.5); 
         ats[i]      = rawAt;
         vols[i]     = malloc(sizeof(float));
         *(vols[i])  = 0.0;
@@ -39,16 +39,21 @@ float vcc_filter(float input, int i, int bufLength, void* data) {
     int b;
     Vcc* vcc = (Vcc*) data;
     // Set the gain for each band
-    for (b = 0; b < vcc->numBands; b++) {
-        void* at = vcc->ats[b];
-        if (b == 0) {
-            at_setGain(0.0, *(vcc->vols[b]),at);
-        }
-        else {
-            at_setGain(*(vcc->vols[b-1]), *(vcc->vols[b]), at);
+    // AT THE END OF EACH BUFFER
+    float output = fx_process(vcc->mb, input, i, bufLength);
+    if (i == bufLength - 1) {
+        for (b = 0; b < vcc->numBands; b++) {
+            at_setGain(*(vcc->vols[b]),vcc->ats[b]);
+            // what the fuck is this shit
+            // if (b == 0) {
+            //     at_setGain(0.0, *(vcc->vols[b]),at);
+            // }
+            // else {
+            //     at_setGain(*(vcc->vols[b-1]), *(vcc->vols[b]), at);
+            // }
         }
     }
-    return fx_process(vcc->mb, input, i, bufLength);
+    return output;
 }
 
 void vcc_free(void* data) {

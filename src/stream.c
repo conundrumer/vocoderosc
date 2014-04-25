@@ -10,7 +10,7 @@
 #define SAMPLE_RATE         (44100)
 #define NUM_SECONDS         (4)
 #define NUM_VOICES          (12)
-#define NUM_BANDS           (5)
+#define NUM_BANDS           (20)
 #define FORMAT              paFloat32
 #define F_LO                (100)
 #define F_HI                (4000)
