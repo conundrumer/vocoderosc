@@ -20,7 +20,7 @@ void* vcc_new(float f_low, float f_high, int numBands, int fs) {
     void* rawMb  = mb_new(f_low, f_high, numBands, fs);
     Fx* mb       = fx_new(mb_filter, mb_free, rawMb);
     for (i = 0; i < numBands; i++) {
-        void* rawAt = at_new(1.0, 1.0);
+        void* rawAt = at_new(0.0, 0.0); 
         ats[i]      = rawAt;
         vols[i]     = malloc(sizeof(float));
         *(vols[i])  = 0.0;
