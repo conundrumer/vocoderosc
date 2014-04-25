@@ -1,11 +1,11 @@
 #include <stdlib.h>
-#include "fx.h"
+#include "../headers/fx.h"
 
 Fx* fx_new(AudioFx audioFx, FreeFx freeFx, void* fxData) {
-    Fx* fx = malloc(sizeof(Fx));
+    Fx* fx      = malloc(sizeof(Fx));
     fx->audioFx = audioFx;
-    fx->freeFx = freeFx;
-    fx->fxData = fxData;
+    fx->freeFx  = freeFx;
+    fx->fxData  = fxData;
     return fx;
 }
 

@@ -1,18 +1,24 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include "portaudio.h"
-#include "synth.h"
-#include "vocoder.h"
-#define NUM_VOICES    (12)
-#define NUM_VOICES_KEYBOARD (49)
-#define NUM_CHANNELS (2)
-#define NUM_SECONDS   (4)
-#define SAMPLE_RATE   (44100)
-#define FRAMES_PER_BUFFER (64)
-#define FORMAT paFloat32
-#define F_LO (100)
-#define F_HI (4000)
-#define NUM_BANDS (5)
+#include "../headers/synth.h"
+#include "../headers/vocoder.h"
+
+#define FRAMES_PER_BUFFER   (64)
+#define NUM_CHANNELS        (1)
+#define SAMPLE_RATE         (44100)
+#define NUM_SECONDS         (4)
+#define NUM_VOICES          (12)
+#define NUM_BANDS           (5)
+#define FORMAT              paFloat32
+#define F_LO                (100)
+#define F_HI                (4000)
+
+typedef struct {
+    Synth*   synth;
+    Vocoder* vc;
+} paData;
 
 /* This routine will be called by the PortAudio engine when audio is needed.
 ** It may called at interrupt level on some machines so don't do anything
@@ -25,27 +31,27 @@ static int paCallback( const void    *inputBuffer,
                        PaStreamCallbackFlags statusFlags,
                        void          *userData )
 {
-    // (void) inputBuffer;    
+    /* To stop unused variable warnings */    
     (void) timeInfo;
     (void) statusFlags;
     unsigned int i;
-    /* Cast data passed through stream to Synth. */
-    Synth *synth = (Synth*)userData;
-    Vocoder* vc = vc_new(F_LO, F_HI, NUM_BANDS, SAMPLE_RATE)
 
+    /* Cast data passed through the stream */
     const float *in = (const float*)inputBuffer;
-    float *out = (float*)outputBuffer;
-    float* synthBuffer = synth_getBuffer(framesPerBuffer, synth);
+    float *out      = (float*)outputBuffer;
+    paData* data    = (paData*)userData;
+
+    float* synthBuffer = synth_getBuffer(framesPerBuffer, data->synth);
     if( inputBuffer == NULL) {
-        *out++ = 0;
-        *out++ = 0;
-    }
-    else {
-        for(i = 0; i<framesPerBuffer; i++) {
-            *out++ = vc_process(*in++, synthBuffer[i], i, framesPerBuffer, vc);
-            *out++ = vc_process(*in++, synthBuffer[i], i, framesPerBuffer, vc);
-            // *out++ = (*in++) + synthBuffer[i];
-            // *out++ = (*in++) + synthBuffer[i];
+        for (i = 0; i < framesPerBuffer; i++) {
+            *out++ = 0;
+        }
+    } else {
+        for(i = 0; i < framesPerBuffer; i++) {
+            // *out++ = vc_process(*in++, synthBuffer[i], i, framesPerBuffer, data->vc);
+            // *out++ = (*in++) + synthBuffer[i]; // Output the synth added and input
+            *out++ = synthBuffer[i]; // Just output the synthesizer
+            // *out++ = (*in++); // Output the voice input
         }
     }
     return 0;
@@ -54,14 +60,19 @@ static int paCallback( const void    *inputBuffer,
 /*******************************************************************/
 PaStream *stream;
 PaError err;
+
 int openPA(Synth* synth);
 int closePA();
 
 int openPA(Synth* synth) {
-
     printf("PortAudio Test: output sawtooth wave.\n"); fflush(stdout);
 
     PaStreamParameters inputParameters, outputParameters;
+    Vocoder* vc = vc_new(F_LO, F_HI, NUM_BANDS, SAMPLE_RATE);
+
+    paData* data = (paData*) malloc(sizeof(paData));
+    data->synth  = synth;
+    data->vc     = vc;
 
     /* Initialize library before making any other calls. */
     err = Pa_Initialize();
@@ -104,9 +115,9 @@ int openPA(Synth* synth) {
             &outputParameters,
             SAMPLE_RATE,
             FRAMES_PER_BUFFER,
-            0,      /* we won't output out of range samples so don't bother clipping them */
+            paClipOff,
             paCallback,
-            synth );
+            data );
     if( err != paNoError ) goto error;
 
     err = Pa_StartStream( stream );
@@ -123,7 +134,6 @@ error:
 }
 
 int closePA() {
-// end:
     /* Stop playback */
     err = Pa_StopStream( stream );
     if( err != paNoError ) goto error;
@@ -145,11 +155,3 @@ error:
     fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
     return err;
 }
-
-// int main() {
-//     Synth* s = synth_new(44100,12);
-//     int err = openPA(s);
-//     err = closePA();
-//     synth_free(s);
-//     return err;
-// }
