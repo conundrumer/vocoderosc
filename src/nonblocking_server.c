@@ -8,7 +8,6 @@
 #include "../headers/synth.h"
 
 #define NUM_KEYS (12)
-#define OCTAVE  (1)
 
 int done = 0;
 
@@ -20,9 +19,6 @@ int keyboard_handler(const char *path, const char *types, lo_arg ** argv,
                 int argc, void *data, void *user_data);
 
 int push_handler(const char *path, const char *types, lo_arg ** argv,
-                int argc, void *data, void *user_data);
-                
-int push_handler2(const char *path, const char *types, lo_arg ** argv, 
                 int argc, void *data, void *user_data);
 
 int startLO(Synth* synth) {
@@ -45,7 +41,7 @@ int startLO(Synth* synth) {
         snprintf(path, 10, "/1/push%d", i);
         snprintf(path2, 10, "/2/push%d", i);
         lo_server_add_method(s, path, "i", push_handler, synth);
-        lo_server_add_method(s, path2, "i", push_handler2, synth);
+        lo_server_add_method(s, path2, "i", push_handler, synth);
     }
     /* add handler for MIDI keyboard */
     lo_server_add_method(s, "/keyboard", "ii", keyboard_handler, synth);
@@ -116,32 +112,17 @@ int push_handler(const char *path, const char *types, lo_arg ** argv,
 
     Synth* synth = (Synth*) user_data;
     char *keystr = (char*) malloc(2);
+    char *octstr = (char*) malloc(1);
     strncpy(keystr, path+7, strlen(path)-7);
-    int key      = atoi(keystr) + (NUM_KEYS*OCTAVE) - 1;
-    int note_on  = argv[0]->i;
-    
-    if (note_on) synth_on(key, synth);
-    else synth_off(key, synth);
-
-    free(keystr);
-    return 0;
-}
-
-int push_handler2(const char *path, const char *types, lo_arg ** argv,
-                  int argc, void *data, void *user_data) {
-    (void) types;
-    (void) argc;
-    (void) data;
-    
-    Synth* synth = (Synth*) user_data;
-    char *keystr = (char*) malloc(2);
-    strncpy(keystr, path+7, strlen(path)-7);
-    int key = atoi(keystr) + (NUM_KEYS*(OCTAVE+1)) - 1;
+    strncpy(octstr, path+1, 1);
+    int oct     = atoi(octstr);
+    int key     = atoi(keystr) + (NUM_KEYS*oct) - 1;
     int note_on = argv[0]->i;
     
     if (note_on) synth_on(key, synth);
-    else synth_off(key, synth);
-    
+    else         synth_off(key, synth);
+
+    free(octstr);
     free(keystr);
     return 0;
 }
