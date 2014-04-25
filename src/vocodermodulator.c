@@ -33,6 +33,10 @@ float vcm_filter(float input, int i, int bufLength, void* data) {
 void vcm_free(void* data) {
     Vcm* vcm = (Vcm*) data;
     fx_free(vcm->mb);
+    int i;
+    for (i = 0; i < vcm->numBands; i++) {
+        free(vcm->vdVols[i]);
+    }
     free(vcm->vdVols);
     free(vcm);
 }

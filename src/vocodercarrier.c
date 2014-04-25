@@ -54,6 +54,11 @@ float vcc_filter(float input, int i, int bufLength, void* data) {
 void vcc_free(void* data) {
     Vcc* vcc = (Vcc*) data;
     fx_free(vcc->mb);
+    int i;
+    for (i = 0; i < vcc->numBands; i++) {
+        free(vcc->vols[i]);
+        at_free(vcc->ats[i]);
+    }
     free(vcc->vols);
     free(vcc->ats);
     free(vcc);

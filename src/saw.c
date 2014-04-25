@@ -45,5 +45,7 @@ float saw_getNext(Saw* saw) {
 }
 
 void saw_free(Saw* saw) {
-    free(saw);
+    if (saw != NULL) {
+        free(saw);
+    }
 }
