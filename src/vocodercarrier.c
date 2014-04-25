@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include "../headers/vocodercarrier.h"
-#include "../headers/bandvolume.h"
 #include "../headers/attenuator.h"
 #include "../headers/fx_multiband.h"
 
@@ -41,11 +40,9 @@ void vcc_free(void* data) {
     free(vcc);
 }
 
-// VdCallback for vocodermodulator. bandVolume has type BandVolume*
 // Sets the gain for a band's attenuator to the input volume
-void vcc_setBandVolume(float volume, void* bandVolume) {
-    BandVolume* bv = (BandVolume*) bandVolume;
-    Vcc* vcc       = (Vcc*) (bv->data);
-    void* at       = vcc->ats[bv->band];
-    at_setGain(volume, at);
+void vcc_setBandVolumePointer(int band, float* volume, void* data) {
+    Vcc* vcc = (Vcc*) (data);
+    void* at = vcc->ats[band];
+    at_setGain(*volume, at);
 }

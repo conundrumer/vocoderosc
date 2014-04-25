@@ -169,7 +169,7 @@ void error(int num, const char *msg, const char *path) {
 
 void read_stdin(Synth* synth) {
     int input = getc(stdin);
-    if (input==32) synth_allOff(synth);
+    if (input==10) synth_allOff(synth);
     else printf("stdin: %d\n",input);
 }
 
