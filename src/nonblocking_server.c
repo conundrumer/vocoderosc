@@ -116,13 +116,17 @@ int push_handler(const char *path, const char *types, lo_arg ** argv,
 
     Synth* synth = (Synth*) user_data;
     char *keystr = (char*) malloc(2);
+    char *octave = (char*) malloc(1);
     strncpy(keystr, path+7, strlen(path)-7);
-    int key      = atoi(keystr) + (NUM_KEYS*OCTAVE) - 1;
-    int note_on  = argv[0]->i;
+    strncpy(octave, testpath+1, 1);
+    int key     = atoi(keystr) + (NUM_KEYS*OCTAVE) - 1;
+    int note_on = argv[0]->i;
+    int oct     = atoi(octave);
     
     if (note_on) synth_on(key, synth);
     else synth_off(key, synth);
 
+    free(octave);
     free(keystr);
     return 0;
 }
