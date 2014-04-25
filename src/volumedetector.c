@@ -8,9 +8,10 @@ typedef struct {
 } Vd;
 
 void* vd_new() {
-    Vd* v  = malloc(sizeof(Vd));
-    v->vol = malloc(sizeof(float));
-    v->avg = 0.0;
+    Vd* v     = malloc(sizeof(Vd));
+    v->vol    = malloc(sizeof(float));
+    v->avg    = 0.0;
+    *(v->vol) = 0.0;
     return (void*)v;
 }
 
@@ -31,6 +32,7 @@ float vd_findVolume(float input, int i, int bufLength, void* data) {
 
 void vd_free(void* data) {
     Vd* v = (Vd*) data;
+    free(v->vol);
     free (v);
 }
 

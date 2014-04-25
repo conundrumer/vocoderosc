@@ -17,8 +17,8 @@ float getBandEdge(float f_low, float f_high, int numBands, int n) {
 
 void* mb_new(float f_low, float f_high, int numBands, int fs) {
     Mb* mb       = malloc(sizeof(Mb));
-    mb->bands    = malloc(numBands*sizeof(void*));
-    mb->fxs      = malloc(numBands*sizeof(void*));
+    mb->bands    = malloc(numBands*sizeof(Fx*));
+    mb->fxs      = malloc(numBands*sizeof(Fx*));
     mb->numBands = numBands;
     int b;
     for (b = 0; b < numBands; b++) {
@@ -27,9 +27,9 @@ void* mb_new(float f_low, float f_high, int numBands, int fs) {
         float fc  = (f_h + f_l) / 2.0; // freq center
         float bw  = (f_h - f_l); // bandwidth
         mb->bands[b] = fx_new(bp_filter, bp_free, bp_new(fc, bw, fs));
-        mb->fxs[b]   = NULL;
+        mb->fxs[b]   = malloc(sizeof(Fx));
     }
-    return (void*)mb;
+    return (void*) mb;
 }
 
 float mb_filter(float input, int i, int bufLength, void* data) {

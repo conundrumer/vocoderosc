@@ -12,7 +12,7 @@ typedef struct {
 
 void* vcm_new(float f_low, float f_high, int numBands, int fs) {
     Vcm* vcm       = malloc(sizeof(Vcm));
-    float** vdVols = malloc(sizeof(float*));
+    float** vdVols = malloc(numBands*sizeof(float*));
     vcm->numBands  = numBands;
     void* mb       = mb_new(f_low, f_high, numBands, fs);
     vcm->mb        = fx_new(mb_filter, mb_free, mb);
