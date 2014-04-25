@@ -34,3 +34,6 @@ float fx_process(Fx* fx, float input, int i, int bufLength);
  * fx_free: frees fx
  */
 void fx_free(Fx* fx);
+
+// returns fx->fxData
+void* fx_getData(Fx* fx);

@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include "fx.h"
-#include "bandpass.h"
-#include "utils.h"
+#include "../headers/fx.h"
+#include "../headers/bandpass.h"
+#include "../headers/utils.h"
 
 #define NUM_FREQS 2
 #define NUM_BW 2

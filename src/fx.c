@@ -19,3 +19,7 @@ void fx_free(Fx* fx) {
     }
     free(fx);
 }
+
+void* fx_getData(Fx* fx) {
+    return fx->fxData;
+}

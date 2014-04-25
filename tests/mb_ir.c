@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include "fx_multiband.h"
-#include "utils.h"
+#include "../headers/fx_multiband.h"
+#include "../headers/utils.h"
 
 #define IR_LEN 32
 
