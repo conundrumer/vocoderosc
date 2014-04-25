@@ -30,13 +30,7 @@ void* at_new(float attack, float decay) {
  */
 float at_filter(float input, int i, int buflength, void* data) {
     At* at = (At*) data;
-    float smoothedGain;
-    if (at->gain > at->prevGain) {
-        smoothedGain = (1 - at->attack)*at->gain + at->attack*at->prevGain;
-    } else {
-        smoothedGain = (1 - at->decay)*at->gain + at->decay*at->prevGain;;
-    }
-    float slope = (smoothedGain - at->prevGain)/buflength;
+    float slope = (at->gain - at->prevGain)/buflength;
     return (slope*i + at->prevGain) * input;
 }
 
@@ -44,7 +38,12 @@ float at_filter(float input, int i, int buflength, void* data) {
 void at_setGain(float newGain, void* data) {
     At* at       = (At*) data;
     at->prevGain = at->gain;
-    at->gain     = newGain;
+
+    if (newGain > at->gain) {
+        at->gain = (1 - at->attack)*newGain + at->attack*at->gain;
+    } else {
+        at->gain = (1 - at->decay)*newGain + at->decay*at->gain;
+    }
 }
 
 void at_free(void* data) {
