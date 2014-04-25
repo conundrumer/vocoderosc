@@ -21,6 +21,9 @@ int keyboard_handler(const char *path, const char *types, lo_arg ** argv,
 
 int push_handler(const char *path, const char *types, lo_arg ** argv,
                 int argc, void *data, void *user_data);
+                
+int push_handler2(const char *path, const char *types, lo_arg ** argv, 
+                int argc, void *data, void *user_data);
 
 int startLO(Synth* synth) {
     int lo_fd;
@@ -38,8 +41,11 @@ int startLO(Synth* synth) {
     int i;
     for (i = 1; i <= NUM_KEYS; i++) {
         char path[10];
+        char path2[10];
         snprintf(path, 10, "/1/push%d", i);
+        snprintf(path2, 10, "/2/push%d", i);
         lo_server_add_method(s, path, "i", push_handler, synth);
+        lo_server_add_method(s, path2, "i", push_handler2, synth);
     }
     /* add handler for MIDI keyboard */
     lo_server_add_method(s, "/keyboard", "ii", keyboard_handler, synth);
@@ -117,6 +123,25 @@ int push_handler(const char *path, const char *types, lo_arg ** argv,
     if (note_on) synth_on(key, synth);
     else synth_off(key, synth);
 
+    free(keystr);
+    return 0;
+}
+
+int push_handler2(const char *path, const char *types, lo_arg ** argv,
+                  int argc, void *data, void *user_data) {
+    (void) types;
+    (void) argc;
+    (void) data;
+    
+    Synth* synth = (Synth*) user_data;
+    char *keystr = (char*) malloc(2);
+    strncpy(keystr, path+7, strlen(path)-7);
+    int key = atoi(keystr) + (NUM_KEYS*(OCTAVE+1)) - 1;
+    int note_on = argv[0]->i;
+    
+    if (note_on) synth_on(key, synth);
+    else synth_off(key, synth);
+    
     free(keystr);
     return 0;
 }
