@@ -12,7 +12,7 @@ int main() {
     float* ones     = malloc(buflength*sizeof(float));
 
     for (i = 0; i < buflength; i++) {
-        x    = (3*M_PI*i) / buflength;
+        x    = (2*i*M_PI/(buflength-1));
         prev = sin(x);
         sintable[i] = prev;
     }
@@ -22,7 +22,7 @@ int main() {
     }
 
     void* at = at_new(1.0, 1.0);
-    at_setGain(8.0, at);
+    at_setGain(0.0, 8.0, at);
     float filtered;
     printf("\nOnes\ngain = 8.0\n......................................\n\
 i\torig\t\tnew\n......................................\n");

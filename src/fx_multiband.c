@@ -31,9 +31,9 @@ void* mb_new(float f_low, float f_high, int numBands, int fs) {
         float fc  = (f_h + f_l) / 2.0; // freq center
         float bw  = (f_h - f_l); // bandwidth
         mb->bands[b] = fx_new(bp_filter, bp_free, bp_new(fc, bw, fs));
-        mb->fxs[b]   = NULL;
+        mb->fxs[b]   = malloc(sizeof(Fx));
     }
-    return (void*)mb;
+    return (void*) mb;
 }
 
 float mb_filter(float input, int i, int bufLength, void* data) {

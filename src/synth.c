@@ -28,8 +28,8 @@ void synth_on(int key, Synth* s) {
             return;
         }
     }
-    printf("could not find available saw\n");
-    printChart(s);
+    // printf("could not find available saw\n");
+    // printChart(s);
     return;
 }
 
@@ -39,12 +39,12 @@ void synth_off(int key, Synth* s) {
     for (i = 0; i < s->poly; i++) {
         if (check_key(key, saws[i])) {
             saw_off(saws[i]);
-            printChart(s);
+            // printChart(s);
             return;
         }
     }
-    printf("Tried to turn off key %d but could not find it\n", key);
-    printChart(s);
+    // printf("Tried to turn off key %d but could not find it\n", key);
+    // printChart(s);
     return;
 }
 
@@ -54,7 +54,7 @@ void synth_allOff(Synth* s) {
     for (i = 0; i < s->poly; i++) {
         saw_off(saws[i]);
     }
-    printChart(s);
+    // printChart(s);
     return;
 }
 
@@ -63,19 +63,14 @@ void synth_free(Synth* s) {
     free(s);
 }
 
-float* synth_getBuffer(int bufLength, Synth* s) {
-    int i, j;
+float synth_getNext(Synth* s) {
+    int i;
     Saw** saws = s->saws;
-    float* outputBuffer = malloc(bufLength*sizeof(float));
-    for (i = 0; i < bufLength; i++) {
-        float sample = 0.0;
-        for (j = 0; j < s->poly; j++) {
-            sample += saw_getNext(saws[j]);
-        }
-        outputBuffer[i] = sample/(float)s->poly;
+    float sample = 0.0;
+    for (i = 0; i < s->poly; i++) {
+        sample += saw_getNext(saws[i]);
     }
-    free(outputBuffer);
-    return outputBuffer;
+    return sample;
 }
 
 void printChart(Synth* s) {

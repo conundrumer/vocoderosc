@@ -41,16 +41,17 @@ static int paCallback( const void    *inputBuffer,
     float *out      = (float*)outputBuffer;
     paData* data    = (paData*)userData;
 
-    float* synthBuffer = synth_getBuffer(framesPerBuffer, data->synth);
+    float synthSample;
     if( inputBuffer == NULL) {
         for (i = 0; i < framesPerBuffer; i++) {
             *out++ = 0;
         }
     } else {
         for(i = 0; i < framesPerBuffer; i++) {
-            // *out++ = vc_process(*in++, synthBuffer[i], i, framesPerBuffer, data->vc);
+            synthSample = synth_getNext(data->synth);
+            *out++ = vc_process(*in++, synthSample, i, framesPerBuffer, data->vc);
             // *out++ = (*in++) + synthBuffer[i]; // Output the synth added and input
-            *out++ = synthBuffer[i]; // Just output the synthesizer
+            // *out++ = synthBuffer[i]; // Just output the synthesizer
             // *out++ = (*in++); // Output the voice input
         }
     }
@@ -87,7 +88,7 @@ int openPA(Synth* synth) {
     printf( "Input device # %d.\n", inputParameters.device );
     printf( "Input LL: %g s\n", Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency );
     printf( "Input HL: %g s\n", Pa_GetDeviceInfo( inputParameters.device )->defaultHighInputLatency );
-    inputParameters.channelCount = NUM_CHANNELS;
+    inputParameters.channelCount = 1;
     inputParameters.sampleFormat = FORMAT;
     inputParameters.suggestedLatency = 
         Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;

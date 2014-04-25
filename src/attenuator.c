@@ -41,10 +41,10 @@ float at_filter(float input, int i, int buflength, void* data) {
 }
 
 /* changes the gain of the attenuator */
-void at_setGain(float gain, void* data) {
+void at_setGain(float prevGain, float newGain, void* data) {
     At* at       = (At*) data;
-    at->prevGain = at->gain;
-    at->gain     = gain;
+    at->prevGain = prevGain;
+    at->gain     = newGain;
 }
 
 void at_free(void* data) {
