@@ -5,10 +5,9 @@
 #include "../headers/synth.h"
 #include "../headers/vocoder.h"
 
-#define FRAMES_PER_BUFFER   (64)
+#define FRAMES_PER_BUFFER   (16)
 #define NUM_CHANNELS        (1)
 #define SAMPLE_RATE         (44100)
-#define NUM_SECONDS         (4)
 #define NUM_VOICES          (12)
 #define NUM_BANDS           (20)
 #define FORMAT              paFloat32
@@ -43,6 +42,7 @@ static int paCallback( const void    *inputBuffer,
 
     float synthSample;
     if( inputBuffer == NULL) {
+        printf("input buf is null\n");
         for (i = 0; i < framesPerBuffer; i++) {
             *out++ = 0;
         }
@@ -88,7 +88,7 @@ int openPA(Synth* synth) {
     printf( "Input device # %d.\n", inputParameters.device );
     printf( "Input LL: %g s\n", Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency );
     printf( "Input HL: %g s\n", Pa_GetDeviceInfo( inputParameters.device )->defaultHighInputLatency );
-    inputParameters.channelCount = 1;
+    inputParameters.channelCount = NUM_CHANNELS;
     inputParameters.sampleFormat = FORMAT;
     inputParameters.suggestedLatency = 
         Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;

@@ -18,7 +18,7 @@ Vocoder* vc_new(float f_low, float f_high, int numBands, int fs) {
 }
 
 float vc_process(float input_m, float input_c, int i, int bufLength, Vocoder* vc) {
-    fx_process(vc->vcm, input_m, i, bufLength);
+    fx_process(vc->vcm, input_m, i, bufLength); // what is being done with mb_out?
     float result = fx_process(vc->vcc, input_c, i, bufLength);
     return result;
 }

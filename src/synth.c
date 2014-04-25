@@ -24,7 +24,7 @@ void synth_on(int key, Synth* s) {
     for (i = 0; i < s->poly; i++) {
         if (check_key(-1, saws[i])) { // this saw is not active
             saw_on(key, saws[i]);
-            printChart(s);
+            // printChart(s);
             return;
         }
     }
