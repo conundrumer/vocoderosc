@@ -4,13 +4,13 @@
 #include "../headers/fx_multiband.h"
 #include "../headers/utils.h"
 
-#define IR_LEN 32
+#define IR_LEN 1024
 
 int main() {
-	int fs = 20;
-	float f_low = 2.0;
-	float f_high = 8.0;
-	int numBands = 10;
+	int fs = 44100;
+	float f_low = 80;
+	float f_high = 4000;
+	int numBands = 20;
 	Fx* fx = fx_new(mb_filter, mb_free, mb_new(f_low, f_high, numBands, fs));
 	float impulse = 1.0;
     int i;
