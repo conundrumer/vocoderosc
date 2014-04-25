@@ -4,9 +4,11 @@
 #include "../headers/bandpass.h"
 #include "../headers/fx.h"
 
+#define FUDGE_FACTOR 1.5
+
 typedef struct {
     int numBands;
-    Fx* bp;
+    // Fx* bp;
     Fx** bands;
     Fx** fxs;
 } Mb;
@@ -18,7 +20,7 @@ float getBandEdge(float f_low, float f_high, int numBands, int n) {
 
 void* mb_new(float f_low, float f_high, int numBands, int fs) {
     Mb* mb       = malloc(sizeof(Mb));
-    mb->bp       = fx_new(bp_filter, bp_free, bp_new((f_high + f_low)/2, (f_high - f_low), fs));
+    // mb->bp       = fx_new(bp_filter, bp_free, bp_new((f_high + f_low)/2, (f_high - f_low), fs));
     mb->bands    = malloc(numBands*sizeof(void*));
     mb->fxs      = malloc(numBands*sizeof(void*));
     mb->numBands = numBands;
@@ -46,7 +48,8 @@ float mb_filter(float input, int i, int bufLength, void* data) {
             mb_out += bp_out; // default is wire
         }
     }
-    return fx_process(mb->bp, mb_out, i, bufLength);
+    // return fx_process(mb->bp, mb_out, i, bufLength);
+    return mb_out / FUDGE_FACTOR;
 }
 
 void mb_free(void* data) {

@@ -7,9 +7,9 @@
 #define IR_LEN 1024
 
 int main() {
-	int fs = 20;
-	float f_low = 3.0;
-	float f_high = 7.0;
+	int fs = 44100;
+	float f_low = 80;
+	float f_high = 4000;
 	int numBands = 20;
 	Fx* fx = fx_new(mb_filter, mb_free, mb_new(f_low, f_high, numBands, fs));
 	float impulse = 1.0;
