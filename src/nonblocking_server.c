@@ -37,7 +37,7 @@ int startLO(Synth* synth) {
     lo_server s = lo_server_new("7770", error);
     printf("Now listening on port 7770\n");
 
-    /* add handlers that will match the path /1/push*, with one int */
+    /* add handlers that will match the paths /1/push* and /2/push*, with one int each */
     int i;
     for (i = 1; i <= NUM_KEYS; i++) {
         char path[10];
