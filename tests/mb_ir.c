@@ -4,7 +4,7 @@
 #include "../headers/fx_multiband.h"
 #include "../headers/utils.h"
 
-#define IR_LEN 256
+#define IR_LEN 1024
 
 int main() {
 	int fs = 20;

@@ -11,6 +11,7 @@ typedef struct {
     float G;
     float A[POLES];
     float a[POLES];
+    float b[POLES];
 } Bp;
 
 /**
@@ -26,7 +27,8 @@ void* bp_new(float freq, float bw, int fs) {
     // printf("wc: %f, wb: %f\n", wc, wb);
 
     float a  = 2.0 - cos(wb) - sqrt(3.0 - 4.0*cos(wb) + cos(wb)*cos(wb));
-    bp->G    = (1.0-a) * sqrt(a*a - 2.0*cos(2.0*wc)*a + 1.0);
+    // float mag = sqrt((1 + cos(2*wc))*(1 + cos(2*wc)) + sin(wc)*sin(wc));
+    bp->G    = (1.0-a) * sqrt(a*a - 2.0*cos(2.0*wc)*a + 1.0) / (2*sin(wc));
     bp->A[0] = 2.0*a*cos(wc);
     bp->A[1] = -1.0 * a*a;
 
@@ -38,7 +40,9 @@ float bp_filter(float input, int i, int bufLength, void* data) {
     (void) i;
     (void) bufLength;
     Bp* bp = (Bp*) data;
-    float output = bp->G * input + bp->A[0] * bp->a[0] + bp->A[1] * bp->a[1];
+    float output = bp->G * (input - bp->b[1] ) + bp->A[0] * bp->a[0] + bp->A[1] * bp->a[1];
+    bp->b[1] = bp->b[0];
+    bp->b[0] = input;
     bp->a[1] = bp->a[0];
     bp->a[0] = output;
     return output;
