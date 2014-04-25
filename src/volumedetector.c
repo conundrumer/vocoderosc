@@ -21,10 +21,10 @@ float vd_findVolume(float input, int i, int bufLength, void* data) {
         v->avg = 0.0;
     }
     else if (i < bufLength) {
-        printf("before = %f\n", v->avg);
-        printf("input  = %f\n", input);
+        // printf("before = %f\n", v->avg);
+        // printf("input  = %f\n", input);
         v->avg += (input * input) / (float)(bufLength);
-        printf("after  = %f\n\n", v->avg);  
+        // printf("after  = %f\n\n", v->avg);  
     }
     return v->avg;
 }
