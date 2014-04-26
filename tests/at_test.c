@@ -21,8 +21,8 @@ int main() {
         ones[i] =1.0;
     }
 
-    void* at = at_new(1.0, 1.0);
-    at_setGain(0.0, 8.0, at);
+    void* at = at_new(0.0, 0.0);
+    at_setGain(1.5, at);
     float filtered;
     printf("\nOnes\ngain = 8.0\n......................................\n\
 i\torig\t\tnew\n......................................\n");

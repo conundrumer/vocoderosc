@@ -4,15 +4,14 @@
 #include "../headers/volumedetector.h"
 #include "../headers/fx_multiband.h"
 
-typedef struct {
-    int numBands;
-    float** vdVols;
-    Fx* mb;
-} Vcm;
-
+/**
+ * vcm_new: 
+ * Initializes a new multiband containing volume detectors and bandpass filters
+ * for each band. Also sets band volume pointers.
+ */
 void* vcm_new(float f_low, float f_high, int numBands, int fs) {
     Vcm* vcm       = malloc(sizeof(Vcm));
-    vcm->vdVols = malloc(numBands*sizeof(float*));
+    vcm->vdVols    = malloc(numBands*sizeof(float*));
     vcm->numBands  = numBands;
     void* mb       = mb_new(f_low, f_high, numBands, fs);
     vcm->mb        = fx_new(mb_filter, mb_free, mb);
@@ -33,6 +32,10 @@ float vcm_filter(float input, int i, int bufLength, void* data) {
 void vcm_free(void* data) {
     Vcm* vcm = (Vcm*) data;
     fx_free(vcm->mb);
+    int i;
+    for (i = 0; i < vcm->numBands; i++) {
+        free(vcm->vdVols[i]);
+    }
     free(vcm->vdVols);
     free(vcm);
 }

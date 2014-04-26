@@ -8,7 +8,6 @@
 #include "../headers/synth.h"
 
 #define NUM_KEYS (12)
-#define OCTAVE  (1)
 
 int done = 0;
 
@@ -21,23 +20,24 @@ int keyboard_handler(const char *path, const char *types, lo_arg ** argv,
 
 int push_handler(const char *path, const char *types, lo_arg ** argv,
                 int argc, void *data, void *user_data);
-                
-int push_handler2(const char *path, const char *types, lo_arg ** argv, 
-                int argc, void *data, void *user_data);
+
+int startLO(Synth* synth);
 
 int startLO(Synth* synth) {
-    int lo_fd;
+    int lo_fd; // LO server socket file descriptor
     fd_set rfds;
     #ifndef WIN32
     struct timeval tv;
     #endif
     int retval;
 
-    /* start a new server on port 7770 */
+    /* Start a new server on port 7770 */
     lo_server s = lo_server_new("7770", error);
-    printf("Now listening on port 7770\n");
+    printf("...Now listening on port 7770\n");
 
-    /* add handlers that will match the paths /1/push* and /2/push*, with one int each */
+    /* Add OSC handler for MIDI keyboard */
+    lo_server_add_method(s, "/keyboard", "ii", keyboard_handler, synth);
+    /* Add OSC handlers that will match the paths /1/push* and /2/push* */
     int i;
     for (i = 1; i <= NUM_KEYS; i++) {
         char path[10];
@@ -45,12 +45,9 @@ int startLO(Synth* synth) {
         snprintf(path, 10, "/1/push%d", i);
         snprintf(path2, 10, "/2/push%d", i);
         lo_server_add_method(s, path, "i", push_handler, synth);
-        lo_server_add_method(s, path2, "i", push_handler2, synth);
+        lo_server_add_method(s, path2, "i", push_handler, synth);
     }
-    /* add handler for MIDI keyboard */
-    lo_server_add_method(s, "/keyboard", "ii", keyboard_handler, synth);
 
-    /* get the file descriptor of the server socket, if supported */
     lo_fd = lo_server_get_socket_fd(s);
 
     if (lo_fd > 0) {
@@ -107,6 +104,7 @@ int startLO(Synth* synth) {
     return 0;
 }
 
+/* Pass key and note-on/-off info from TouchOSC device to the synth */
 int push_handler(const char *path, const char *types, lo_arg ** argv,
                  int argc, void *data, void *user_data) {
 
@@ -115,37 +113,24 @@ int push_handler(const char *path, const char *types, lo_arg ** argv,
     (void) data;
 
     Synth* synth = (Synth*) user_data;
+    // string manipulation to get key and octave
     char *keystr = (char*) malloc(2);
+    char *octstr = (char*) malloc(1);
     strncpy(keystr, path+7, strlen(path)-7);
-    int key      = atoi(keystr) + (NUM_KEYS*OCTAVE) - 1;
-    int note_on  = argv[0]->i;
-    
-    if (note_on) synth_on(key, synth);
-    else synth_off(key, synth);
-
-    free(keystr);
-    return 0;
-}
-
-int push_handler2(const char *path, const char *types, lo_arg ** argv,
-                  int argc, void *data, void *user_data) {
-    (void) types;
-    (void) argc;
-    (void) data;
-    
-    Synth* synth = (Synth*) user_data;
-    char *keystr = (char*) malloc(2);
-    strncpy(keystr, path+7, strlen(path)-7);
-    int key = atoi(keystr) + (NUM_KEYS*(OCTAVE+1)) - 1;
+    strncpy(octstr, path+1, 1);
+    int oct     = atoi(octstr);
+    int key     = atoi(keystr) + (NUM_KEYS*oct) - 1;
     int note_on = argv[0]->i;
     
     if (note_on) synth_on(key, synth);
-    else synth_off(key, synth);
-    
+    else         synth_off(key, synth);
+
+    free(octstr);
     free(keystr);
     return 0;
 }
 
+/* Pass key and note-on/-off info from MIDI keyboard to the synth */
 int keyboard_handler(const char *path, const char *types, lo_arg ** argv,
                      int argc, void *data, void *user_data) {
     
@@ -167,10 +152,9 @@ void error(int num, const char *msg, const char *path) {
     printf("liblo server error %d in path %s: %s\n", num, path, msg);
 }
 
+/* Pressing the enter key turns off all saws */
 void read_stdin(Synth* synth) {
     int input = getc(stdin);
     if (input==10) synth_allOff(synth);
     else printf("stdin: %d\n",input);
 }
-
-/* vi:set ts=8 sts=4 sw=4: */

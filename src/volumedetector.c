@@ -1,5 +1,5 @@
-// #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "../headers/volumedetector.h"
 
 typedef struct {
@@ -22,10 +22,8 @@ float vd_findVolume(float input, int i, int bufLength, void* data) {
         v->avg = 0.0;
     }
     else {
-        // printf("before = %f\n", v->avg);
-        // printf("input  = %f\n", input);
-        v->avg += (input * input) / (float)(bufLength);
-        // printf("after  = %f\n\n", v->avg);  
+        // v->avg += abs(input) / (float)(bufLength);
+        v->avg += (input*input)/(float)(bufLength);
     }
     return v->avg;
 }

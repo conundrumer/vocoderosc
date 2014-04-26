@@ -35,7 +35,7 @@ float saw_getNext(Saw* saw) {
         float period = getPeriod(saw->fs, saw->key, F0, K0, NUM_KEYS);
         float slope  = 2.0/period;
         saw->currentSample += slope;
-        // Drop to when sample exceeds 1.0
+        // Drop when sample exceeds 1.0
         if (saw->currentSample > 1.0f) {
             saw->currentSample -= 2.0f;
         }
@@ -45,5 +45,7 @@ float saw_getNext(Saw* saw) {
 }
 
 void saw_free(Saw* saw) {
-    free(saw);
+    if (saw != NULL) {
+        free(saw);
+    }
 }
