@@ -1,6 +1,9 @@
 test:
 	gcc -o bin/test -Wall -Wextra src/* -llo -lportaudio
 
+test-win32:
+	gcc -o bin/test -Wall -Wextra src/* -llo -lportaudio -lws2_32
+
 at_test:
 	gcc -o bin/at_test -Wall -Wextra tests/at_test.c src/attenuator.c -lm
 
