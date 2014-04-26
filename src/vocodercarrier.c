@@ -48,7 +48,7 @@ float vcc_filter(float input, int i, int bufLength, void* data) {
     if (i == bufLength - 1) {
         for (b = 0; b < vcc->numBands; b++) {
             float bandVolume = *(vcc->vols[b]);
-            at_setGain(bandVolume,vcc->ats[b]);
+            at_setGain(8*bandVolume,vcc->ats[b]);
         }
     }
     return output;

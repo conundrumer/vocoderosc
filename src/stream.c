@@ -5,14 +5,15 @@
 #include "../headers/synth.h"
 #include "../headers/vocoder.h"
 
-#define FRAMES_PER_BUFFER   (2048)
+#define FRAMES_PER_BUFFER   (256)
 #define NUM_CHANNELS        (1)
 #define SAMPLE_RATE         (44100)
+#define NUM_SECONDS         (4)
 #define NUM_VOICES          (12)
-#define NUM_BANDS           (16) // should not exceed (FRAMES_PER_BUFFER/2)
+#define NUM_BANDS           (20)
 #define FORMAT              paFloat32
 #define F_LO                (100)
-#define F_HI                (4000)
+#define F_HI                (12000)
 
 typedef struct {
     Synth*   synth;
@@ -33,6 +34,7 @@ static int paCallback( const void    *inputBuffer,
     /* To stop unused variable warnings */    
     (void) timeInfo;
     (void) statusFlags;
+    unsigned int i;
 
     /* Cast data passed through the stream */
     const float *in = (const float*)inputBuffer;
@@ -40,19 +42,16 @@ static int paCallback( const void    *inputBuffer,
     paData* data    = (paData*)userData;
 
     float synthSample;
-    unsigned int i;
-    if(inputBuffer == NULL) {
+    if( inputBuffer == NULL) {
         for (i = 0; i < framesPerBuffer; i++) {
             *out++ = 0;
         }
     } else {
-    	// Get samples from the synth and mic and pass them on to the vocoder
-    	// for output samples.
         for(i = 0; i < framesPerBuffer; i++) {
             synthSample = synth_getNext(data->synth);
             *out++ = vc_process(*in++, synthSample, i, framesPerBuffer, data->vc);
-            // *out++ = (*in++) + synthSample; // Output the synth added and input
-            // *out++ = synthSample; // Just output the synthesizer
+            // *out++ = (*in++) + synthBuffer[i]; // Output the synth added and input
+            // *out++ = synthBuffer[i]; // Just output the synthesizer
             // *out++ = (*in++); // Output the voice input
         }
     }
@@ -63,13 +62,15 @@ static int paCallback( const void    *inputBuffer,
 PaStream *stream;
 PaError err;
 
-int openPA(Synth* synth, Vocoder* vc);
+int openPA(Synth* synth);
 int closePA();
 
-int openPA(Synth* synth, Vocoder* vc) {
-    PaStreamParameters inputParameters, outputParameters;
+int openPA(Synth* synth) {
+    printf("PortAudio Test: output sawtooth wave.\n"); fflush(stdout);
 
-    /* Ready the data to be passed to the callback. Has synth and vocoder. */
+    PaStreamParameters inputParameters, outputParameters;
+    Vocoder* vc = vc_new(F_LO, F_HI, NUM_BANDS, SAMPLE_RATE);
+
     paData* data = (paData*) malloc(sizeof(paData));
     data->synth  = synth;
     data->vc     = vc;
@@ -87,7 +88,7 @@ int openPA(Synth* synth, Vocoder* vc) {
     printf( "Input device # %d.\n", inputParameters.device );
     printf( "Input LL: %g s\n", Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency );
     printf( "Input HL: %g s\n", Pa_GetDeviceInfo( inputParameters.device )->defaultHighInputLatency );
-    inputParameters.channelCount = NUM_CHANNELS;
+    inputParameters.channelCount = 1;
     inputParameters.sampleFormat = FORMAT;
     inputParameters.suggestedLatency = 
         Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;
@@ -109,11 +110,17 @@ int openPA(Synth* synth, Vocoder* vc) {
     outputParameters.hostApiSpecificStreamInfo = NULL;
     
     /* Open an audio I/O stream. */
-    err = Pa_OpenStream(&stream, &inputParameters, &outputParameters,
-			SAMPLE_RATE, FRAMES_PER_BUFFER, paClipOff, paCallback, data);
+    err = Pa_OpenStream( 
+            &stream,
+            &inputParameters,
+            &outputParameters,
+            SAMPLE_RATE,
+            FRAMES_PER_BUFFER,
+            paClipOff,
+            paCallback,
+            data );
     if( err != paNoError ) goto error;
 
-    /* Start the stream */
     err = Pa_StartStream( stream );
     if( err != paNoError ) goto error;
 
@@ -127,10 +134,7 @@ error:
     return err;
 }
 
-int closePA(Synth* synth, Vocoder* vc) {
-	synth_free(synth);
-	vc_free(vc);
-
+int closePA() {
     /* Stop playback */
     err = Pa_StopStream( stream );
     if( err != paNoError ) goto error;
