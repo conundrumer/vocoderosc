@@ -8,12 +8,7 @@
 #define FRAMES_PER_BUFFER   (256)
 #define NUM_CHANNELS        (1)
 #define SAMPLE_RATE         (44100)
-#define NUM_SECONDS         (4)
-#define NUM_VOICES          (12)
-#define NUM_BANDS           (100)
 #define FORMAT              paFloat32
-#define F_LO                (80)
-#define F_HI                (12000)
 
 typedef struct {
     Synth*   synth;
@@ -51,8 +46,8 @@ static int paCallback( const void    *inputBuffer,
             synthSample = synth_getNext(data->synth);
             // synthSample = 2*(float)rand()/(float)RAND_MAX - 1; // white noise test
             *out++ = vc_process(*in++, synthSample, i, framesPerBuffer, data->vc);
-            // *out++ = (*in++) + synthBuffer[i]; // Output the synth added and input
-            // *out++ = synthBuffer[i]; // Just output the synthesizer
+            // *out++ = (*in++) + synthSample; // Output the synth added and input
+            // *out++ = synthSample; // Just output the synthesizer
             // *out++ = (*in++); // Output the voice input
         }
     }
@@ -63,14 +58,13 @@ static int paCallback( const void    *inputBuffer,
 PaStream *stream;
 PaError err;
 
-int openPA(Synth* synth);
+int openPA(Synth* synth, Vocoder* vc);
 int closePA();
 
-int openPA(Synth* synth) {
+int openPA(Synth* synth, Vocoder* vc) {
     printf("PortAudio Test: output sawtooth wave.\n"); fflush(stdout);
 
     PaStreamParameters inputParameters, outputParameters;
-    Vocoder* vc = vc_new(F_LO, F_HI, NUM_BANDS, SAMPLE_RATE);
 
     paData* data = (paData*) malloc(sizeof(paData));
     data->synth  = synth;
@@ -89,7 +83,7 @@ int openPA(Synth* synth) {
     printf( "Input device # %d.\n", inputParameters.device );
     printf( "Input LL: %g s\n", Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency );
     printf( "Input HL: %g s\n", Pa_GetDeviceInfo( inputParameters.device )->defaultHighInputLatency );
-    inputParameters.channelCount = 1;
+    inputParameters.channelCount = NUM_CHANNELS;
     inputParameters.sampleFormat = FORMAT;
     inputParameters.suggestedLatency = 
         Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;
@@ -132,6 +126,8 @@ error:
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );
     fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
+    synth_free(data->synth);
+    vc_free(data->vc);
     return err;
 }
 
