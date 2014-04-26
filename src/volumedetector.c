@@ -22,11 +22,7 @@ float vd_findVolume(float input, int i, int bufLength, void* data) {
         v->avg = 0.0;
     }
     else {
-        // v->avg += abs(input) / (float)(bufLength);
-        v->avg += (input*input)/(float)(bufLength);
-        // if (abs(input) > v->avg) {
-        //     v->avg = abs(input);
-        // }
+        v->avg += M_SQRT2*fabs(input)/(float)(bufLength);
     }
     return v->avg;
 }

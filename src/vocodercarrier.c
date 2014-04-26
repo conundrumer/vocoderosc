@@ -18,7 +18,7 @@ void* vcc_new(float f_low, float f_high, int numBands, int fs) {
     void* rawMb  = mb_new(f_low, f_high, numBands, fs);
     Fx* mb       = fx_new(mb_filter, mb_free, rawMb);
     for (i = 0; i < numBands; i++) {
-        void* rawAt = at_new(0.15, 0.5);
+        void* rawAt = at_new(0.0, 0.0);
         ats[i]      = rawAt;
         vols[i]     = malloc(sizeof(float));
         *(vols[i])  = 0.0;
@@ -48,7 +48,7 @@ float vcc_filter(float input, int i, int bufLength, void* data) {
     if (i == bufLength - 1) {
         for (b = 0; b < vcc->numBands; b++) {
             float bandVolume = *(vcc->vols[b]);
-            at_setGain(8*bandVolume,vcc->ats[b]);
+            at_setGain(bandVolume,vcc->ats[b]);
         }
     }
     return output;

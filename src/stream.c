@@ -10,9 +10,9 @@
 #define SAMPLE_RATE         (44100)
 #define NUM_SECONDS         (4)
 #define NUM_VOICES          (12)
-#define NUM_BANDS           (20)
+#define NUM_BANDS           (100)
 #define FORMAT              paFloat32
-#define F_LO                (100)
+#define F_LO                (80)
 #define F_HI                (12000)
 
 typedef struct {
@@ -49,6 +49,7 @@ static int paCallback( const void    *inputBuffer,
     } else {
         for(i = 0; i < framesPerBuffer; i++) {
             synthSample = synth_getNext(data->synth);
+            // synthSample = 2*(float)rand()/(float)RAND_MAX - 1; // white noise test
             *out++ = vc_process(*in++, synthSample, i, framesPerBuffer, data->vc);
             // *out++ = (*in++) + synthBuffer[i]; // Output the synth added and input
             // *out++ = synthBuffer[i]; // Just output the synthesizer
