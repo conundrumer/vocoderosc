@@ -5,16 +5,16 @@
 #include "../headers/synth.h"
 #include "../headers/vocoder.h"
 
-#define FRAMES_PER_BUFFER   (64)
-#define NUM_INPUT        (2)
+#define FRAMES_PER_BUFFER (64)
+#define NUM_INPUT         (2)
 #define NUM_OUTPUT        (1)
-#define SAMPLE_RATE         (44100)
-#define FORMAT              paFloat32
+#define SAMPLE_RATE       (44100)
+#define FORMAT            paFloat32
 
-typedef struct {
-    Synth*   synth;
-    Vocoder* vc;
-} paData;
+// typedef struct {
+//     Synth*   synth;
+//     Vocoder* vc;
+// } paData;
 
 /* This routine will be called by the PortAudio engine when audio is needed.
 ** It may called at interrupt level on some machines so don't do anything
@@ -35,7 +35,8 @@ static int paCallback( const void    *inputBuffer,
     /* Cast data passed through the stream */
     const float *in = (const float*)inputBuffer;
     float *out      = (float*)outputBuffer;
-    paData* data    = (paData*)userData;
+    // paData* data    = (paData*)userData;
+    Vocoder* vc = (Vocoder*) userData;
 
     float modulator, carrier;
     if( inputBuffer == NULL) {
@@ -44,13 +45,15 @@ static int paCallback( const void    *inputBuffer,
         }
     } else {
         for(i = 0; i < framesPerBuffer; i++) {
-            /* inputs */
+            
+            /* INPUTS */
             modulator = *in++; // main / left
             carrier = *in++; // right if two input channels
             // carrier = synth_getNext(data->synth); // use synth
             // carrier = 2*(float)rand()/(float)RAND_MAX - 1; // use white noise
-            /* outputs */
-            *out++ = vc_process(modulator, carrier, i, framesPerBuffer, data->vc);
+            
+            /* OUTPUTS */
+            *out++ = vc_process(modulator, carrier, i, framesPerBuffer, vc);
             // *out++ = modulator + carrier; // output: input + synth
             // *out++ = carrier/4; // output: synth
             // *out++ = modulator; // output: input
@@ -63,17 +66,17 @@ static int paCallback( const void    *inputBuffer,
 PaStream *stream;
 PaError err;
 
-int openPA(Synth* synth, Vocoder* vc);
+int openPA(Vocoder* vc);
 int closePA();
 
-int openPA(Synth* synth, Vocoder* vc) {
+int openPA(Vocoder* vc) {
     printf("PortAudio Test: output sawtooth wave.\n"); fflush(stdout);
 
     PaStreamParameters inputParameters, outputParameters;
 
-    paData* data = (paData*) malloc(sizeof(paData));
-    data->synth  = synth;
-    data->vc     = vc;
+    // paData* data = (paData*) malloc(sizeof(paData));
+    // data->synth  = synth;
+    // data->vc     = vc;
 
     /* Initialize library before making any other calls. */
     err = Pa_Initialize();
@@ -118,7 +121,7 @@ int openPA(Synth* synth, Vocoder* vc) {
             FRAMES_PER_BUFFER,
             paClipOff,
             paCallback,
-            data );
+            vc );
     if( err != paNoError ) goto error;
 
     err = Pa_StartStream( stream );
@@ -131,8 +134,8 @@ error:
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );
     fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
-    synth_free(data->synth);
-    vc_free(data->vc);
+    // synth_free(data->synth);
+    vc_free(vc);
     return err;
 }
 
