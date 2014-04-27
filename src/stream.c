@@ -5,8 +5,9 @@
 #include "../headers/synth.h"
 #include "../headers/vocoder.h"
 
-#define FRAMES_PER_BUFFER   (256)
-#define NUM_CHANNELS        (1)
+#define FRAMES_PER_BUFFER   (64)
+#define NUM_INPUT        (2)
+#define NUM_OUTPUT        (1)
 #define SAMPLE_RATE         (44100)
 #define FORMAT              paFloat32
 
@@ -36,19 +37,23 @@ static int paCallback( const void    *inputBuffer,
     float *out      = (float*)outputBuffer;
     paData* data    = (paData*)userData;
 
-    float synthSample;
+    float modulator, carrier;
     if( inputBuffer == NULL) {
         for (i = 0; i < framesPerBuffer; i++) {
             *out++ = 0;
         }
     } else {
         for(i = 0; i < framesPerBuffer; i++) {
-            synthSample = synth_getNext(data->synth);
-            // synthSample = 2*(float)rand()/(float)RAND_MAX - 1; // white noise test
-            *out++ = vc_process(*in++, synthSample, i, framesPerBuffer, data->vc);
-            // *out++ = (*in++) + synthSample; // Output the synth added and input
-            // *out++ = synthSample; // Just output the synthesizer
-            // *out++ = (*in++); // Output the voice input
+            /* inputs */
+            modulator = *in++; // main / left
+            carrier = *in++; // right if two input channels
+            // carrier = synth_getNext(data->synth); // use synth
+            // carrier = 2*(float)rand()/(float)RAND_MAX - 1; // use white noise
+            /* outputs */
+            *out++ = vc_process(modulator, carrier, i, framesPerBuffer, data->vc);
+            // *out++ = modulator + carrier; // output: input + synth
+            // *out++ = carrier/4; // output: synth
+            // *out++ = modulator; // output: input
         }
     }
     return 0;
@@ -83,7 +88,7 @@ int openPA(Synth* synth, Vocoder* vc) {
     printf( "Input device # %d.\n", inputParameters.device );
     printf( "Input LL: %g s\n", Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency );
     printf( "Input HL: %g s\n", Pa_GetDeviceInfo( inputParameters.device )->defaultHighInputLatency );
-    inputParameters.channelCount = NUM_CHANNELS;
+    inputParameters.channelCount = NUM_INPUT;
     inputParameters.sampleFormat = FORMAT;
     inputParameters.suggestedLatency = 
         Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;
@@ -98,7 +103,7 @@ int openPA(Synth* synth, Vocoder* vc) {
     printf( "Output device # %d.\n", outputParameters.device );
     printf( "Output LL: %g s\n", Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency );
     printf( "Output HL: %g s\n", Pa_GetDeviceInfo( outputParameters.device )->defaultHighOutputLatency );
-    outputParameters.channelCount = NUM_CHANNELS;
+    outputParameters.channelCount = NUM_OUTPUT;
     outputParameters.sampleFormat = FORMAT;
     outputParameters.suggestedLatency = 
         Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;
