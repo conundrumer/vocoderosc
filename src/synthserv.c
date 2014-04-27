@@ -9,7 +9,7 @@
 #include "../headers/attenuator.h"
 
 #define NUM_VOICES    (12)
-#define NUM_BANDS     (100)
+#define NUM_BANDS     (128)
 #define SAMPLE_RATE   (44100)
 #define F_LO          (80)
 #define F_HI		  (12000)

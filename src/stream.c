@@ -45,10 +45,10 @@ static int paCallback( const void    *inputBuffer,
         for(i = 0; i < framesPerBuffer; i++) {
             synthSample = synth_getNext(data->synth);
             // synthSample = 2*(float)rand()/(float)RAND_MAX - 1; // white noise test
-            *out++ = vc_process(*in++, synthSample, i, framesPerBuffer, data->vc);
+            // *out++ = vc_process(*in++, synthSample, i, framesPerBuffer, data->vc);
             // *out++ = (*in++) + synthSample; // Output the synth added and input
             // *out++ = synthSample; // Just output the synthesizer
-            // *out++ = (*in++); // Output the voice input
+            *out++ = (*in++); // Output the voice input
         }
     }
     return 0;
