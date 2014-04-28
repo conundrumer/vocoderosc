@@ -36,8 +36,7 @@ To run both components of vocoderosc on 1 computer, follow these steps:
 
 1.  If using a device running TouchOSC, change the IP address in the TouchOSC settings to your
     machine's IP address and set the port number to 7770.
-2.  
-    (a) If using a connected MIDI device such as a MIDI keyboard, change directories to `vocoderosc/vocoderosc_1/` and run `sendOSC.srp`.
+2.  (a) If using a connected MIDI device such as a MIDI keyboard, change directories to `vocoderosc/vocoderosc_1/` and run `sendOSC.srp`.
 
     (b) You also have the option of using a MIDI device that is connected to a separate computer. In this case, on the computer connected to the MIDI device, modify lines 13-17 of the file `vocoderosc/vocoderosc_1/sendOSC.srp` to match the code snippet below, replacing the parameter `"IP ADDRESS"` on line 17 with the IP address of the machine running the vocoder:
     ```sh
@@ -49,13 +48,14 @@ To run both components of vocoderosc on 1 computer, follow these steps:
     ```
     Then, on the computer connected to the MIDI device, change directories to `vocoder/vocoderosc_1/` and run `sendOSC.srp`.
 3.  Change directories to `vocoderosc/vocoderosc_1/` and enter the following commands:
+    
     ```sh
     $ make test
     $ bin/test
     ```
 
 ### Running on 2 computers ###
-To run the synthesizer component, follow steps 1 and 2 from above, modifying and running the file `vocoderosc/sendOSC.srp` instead of `vocoderosc/vocoderosc_1/sendOSC.srp`. Then enter the following commands:
+To run the synthesizer component, follow steps 1 and 2 from above, modifying and running the file `vocoderosc/sendOSC.srp` instead of `vocoderosc/vocoderosc_1/sendOSC.srp`. Then enter the following commands from the `vocoderosc/` directory:
 ```sh
 $ make lo_server
 $ bin/lo_server
