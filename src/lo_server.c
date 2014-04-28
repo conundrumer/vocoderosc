@@ -1,3 +1,8 @@
+/**
+ * lo_server.c
+ * Starts an OSC server using the libLO library to handle OSC messages and
+ * pass key and octave information to the synthesizer. */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
@@ -8,11 +13,6 @@
 #include "../headers/synth.h"
 
 #define NUM_KEYS (12)
-
-/**
- * lo_server.c
- * Starts an OSC server using the libLO library to handle OSC messages and
- * pass key and octave information to the synthesizer. */
 
 int done = 0;
 
