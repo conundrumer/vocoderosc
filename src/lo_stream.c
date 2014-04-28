@@ -1,3 +1,7 @@
+/** lo_stream.c
+ *  Everything necessary for a PortAudio stream on a computer running the synthesizer.
+ *  Ouputs samples from the synthesizer onto the vocoder. */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
