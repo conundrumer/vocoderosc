@@ -4,9 +4,9 @@
 #include <stdio.h>
 #include <math.h>
 #include "portaudio.h"
-#include "../headers/synth.h"
-#include "../headers/vocoder.h"
-#include "../headers/attenuator.h"
+#include "../../headers/synth.h"
+#include "../../headers/vocoder.h"
+#include "../../headers/attenuator.h"
 
 #define NUM_VOICES    (12)
 #define NUM_BANDS     (100)
