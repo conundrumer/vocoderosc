@@ -10,7 +10,7 @@
 #include "../headers/attenuator.h"
 
 #define NUM_VOICES    (12)
-#define NUM_BANDS     (30)
+#define NUM_BANDS     (100)
 #define SAMPLE_RATE   (44100)
 #define F_LO          (80)
 #define F_HI		  (12000)
@@ -37,12 +37,12 @@ int main(int argc, char *argv[]) {
     else if (strcmp(argv[1], "lo") == 0) {
     	printf("Running in lo server mode\n");
     	if (openPA(synth, vc, 1) == 0) {
-    		startLO(synth); // Start LO server
+    		startLO(synth); // Start OSC server
     	}
     } else if (strcmp(argv[1], "vc") == 0) {
     	printf("Running in vocoder mode\n");
     	if (openPA(synth, vc, 2) == 0) {
-    		while(1) {} // No LO server
+    		while(1) {} // No OSC server
     	}
     }
     return 0;

@@ -67,10 +67,6 @@ int openPA(Synth* synth) {
 
     PaStreamParameters inputParameters, outputParameters;
 
-    // paData* data = (paData*) malloc(sizeof(paData));
-    // data->synth  = synth;
-    // data->vc     = vc;
-
     /* Initialize library before making any other calls. */
     err = Pa_Initialize();
     if( err != paNoError ) goto error;
@@ -128,7 +124,6 @@ error:
     fprintf( stderr, "Error number: %d\n", err );
     fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
     synth_free(synth);
-    // vc_free(vc);
     return err;
 }
 

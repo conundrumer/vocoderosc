@@ -11,12 +11,6 @@
 #define SAMPLE_RATE       (44100)
 #define FORMAT            paFloat32
 
-typedef struct {
-    Synth*   synth;
-    Vocoder* vc;
-    int mode;
-} paData;
-
 /* This routine will be called by the PortAudio engine when audio is needed.
 ** It may called at interrupt level on some machines so don't do anything
 ** that could mess up the system like calling malloc() or free().
@@ -36,7 +30,6 @@ static int paCallback( const void    *inputBuffer,
     /* Cast data passed through the stream */
     const float *in = (const float*)inputBuffer;
     float *out      = (float*)outputBuffer;
-    // paData* data    = (paData*)userData;
     Vocoder* vc = (Vocoder*) userData;
 
     float modulator, carrier;
@@ -74,10 +67,6 @@ int openPA(Vocoder* vc) {
     printf("PortAudio Test: output sawtooth wave.\n"); fflush(stdout);
 
     PaStreamParameters inputParameters, outputParameters;
-
-    // paData* data = (paData*) malloc(sizeof(paData));
-    // data->synth  = synth;
-    // data->vc     = vc;
 
     /* Initialize library before making any other calls. */
     err = Pa_Initialize();
@@ -135,7 +124,6 @@ error:
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );
     fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
-    // synth_free(data->synth);
     vc_free(vc);
     return err;
 }
