@@ -1,0 +1,56 @@
+<h1>CMSIP Project 5</h1>
+<h2>Readme</h2>
+<p>For our project we created a system we call vocoderosc that combines human voice input with a polyphonic synthesizer. The vocoder system consists of two main components: the synthesizer and the vocoder process. The user has the option of running both components on 1 machine or on 2 separate machines (further explanation and directions are below).</p>
+<h4>Synthesizer</h4>
+<p>The synthesizer runs a server to listen for OSC messages from devices running TouchOSC and connected MIDI devices, such as a MIDI keyboard. The synthesizer derives key and octave from the OSC messages, and then uses these to control oscillators (saw waves) which output samples to the vocoder component through a PortAudio stream.</p>
+<h5>Relevant Files</h5>
+<ul>
+<li>src/lo_server.c</li>
+<li>src/lo_synthserv.c</li>
+<li>src/lo_stream.c</li>
+<li>src/synth.c</li>
+<li>src/saw.c</li>
+<li>src/utils.c</li>
+</ul>
+<h4>Vocoder</h4>
+<p>The vocoder component combines input from the synthesizer with input from a connected microphone by first passing each through a multiband filter. The volume of each band of the microphone input is then used to modulate the corresponding band of synthesizer input. The result is outputted through a PortAudio stream.</p>
+<h5>Relevant Files</h5>
+<ul>
+<li>src/vocoder.c</li>
+<li>src/vocodermodulator.c</li>
+<li>src/volumedetector.c </li>
+<li>src/vocodercarrier.c</li>
+<li>src/attenuator.c</li>
+<li>src/bandpass.c</li>
+<li>src/fx.c</li>
+<li>src/fx_multiband.c</li>
+<li>src/synthserv.c</li>
+<li>src/stream.c</li>
+<li>src/utils.c</li>
+</ul>
+<h2>Usage</h2>
+<h3>Running on 1 computer</h3>
+<p>To run both components of vocoderosc on 1 computer, follow these steps:</p>
+<ol>
+<li>If using a device running TouchOSC, change the IP address in the TouchOSC settings to your
+machine&#39;s IP address and set the port number to 7770.</li>
+<li><p>(a) If using a connected MIDI device such as a MIDI keyboard, change directories to <code>vocoderosc/vocoderosc_1/</code> and run <code>sendOSC.srp</code>.</p>
+<p>(b) You also have the option of using a MIDI device that is connected to a separate computer. In this case, on the computer connected to the MIDI device, modify lines 13-17 of the file <code>vocoderosc/vocoderosc_1/sendOSC.srp</code> to match the code snippet below, replacing the parameter <code>&quot;IP ADDRESS&quot;</code> on line 17 with the IP address of the machine running the vocoder:</p>
+<pre><code class="lang-sh">13 // osc client
+14 def startup():
+15     # addr = osc_create_address(&quot;&quot;, &quot;8001&quot;, false) // local
+16     # another computer
+17     addr = osc_create_address(&quot;IP ADDRESS&quot;, &quot;7770&quot;, false)</code></pre>
+<p>Then, on the computer connected to the MIDI device, change directories to <code>vocoder/vocoderosc_1/</code> and run <code>sendOSC.srp</code>.</p>
+</li>
+<li>Change directories to <code>vocoderosc/vocoderosc_1/</code> and enter the following commands:<pre><code class="lang-sh">$ make test
+$ bin/test</code></pre>
+</li>
+</ol>
+<h3>Running on 2 computers</h3>
+<p>To run the synthesizer component, follow step 1 and 2 from above, modifying and running the file <code>vocoderosc/sendOSC.srp</code> instead of <code>vocoderosc/vocoderosc_1/sendOSC.srp</code>. Then enter the following commands:</p>
+<pre><code class="lang-sh">$ make lo_server
+$ bin/lo_server</code></pre>
+<p>To run the vocoder component, enter the following commands from the <code>vocoderosc/</code> directory:</p>
+<pre><code class="lang-sh">$ make pa_stream
+$ bin/pa_stream</code></pre>
