@@ -55,13 +55,15 @@ To run both components of vocoderosc on 1 computer, follow these steps:
     ```
 
 ### Running on 2 computers ###
-To run the synthesizer component, follow steps 1 and 2 from above, modifying and running the file `vocoderosc/sendOSC.srp` instead of `vocoderosc/vocoderosc_1/sendOSC.srp`. Then enter the following commands from the `vocoderosc/` directory:
+In case a machine has difficulties running both components, you have the option of separating the system.
+
+To run the synthesizer component on a machine with libLO and PortAudio installed, follow steps 1 and 2 from above, modifying and running the file `vocoderosc/sendOSC.srp` instead of `vocoderosc/vocoderosc_1/sendOSC.srp`. Then enter the following commands from the `vocoderosc/` directory:
 ```sh
 $ make lo_server
 $ bin/lo_server
 ```
 
-To run the vocoder component, enter the following commands from the `vocoderosc/` directory:
+To run the vocoder component on a separate machine that has PortAudio installed, enter the following commands from the `vocoderosc/` directory:
 ```sh
 $ make pa_stream
 $ bin/pa_stream
