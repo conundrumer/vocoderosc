@@ -75,5 +75,4 @@ void vcc_free(void* data) {
 void vcc_setBandVolumePointer(int band, float* volume, void* data) {
     Vcc* vcc = (Vcc*) (data);
     vcc->vols[band] = volume;
-
 }

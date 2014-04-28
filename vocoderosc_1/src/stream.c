@@ -1,3 +1,10 @@
+/** stream.c
+ *  Everything necessary for a PortAudio stream on a computer running the both
+ *  the vocoder and synthesizer.
+ *  Takes input from a microphone, generates a new synthesizer sample, and ouputs
+ *  the result of applying the vocoder process to them.
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -128,6 +135,7 @@ error:
     fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
     synth_free(data->synth);
     vc_free(data->vc);
+    free(data);
     return err;
 }
 
