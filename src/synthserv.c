@@ -12,7 +12,7 @@
 #define NUM_BANDS     (30)
 #define SAMPLE_RATE   (44100)
 #define F_LO          (80)
-#define F_HI		  (12000)
+#define F_HI          (12000)
 
 // To stop implicit declaration warnings
 int openPA(Vocoder* vc);
