@@ -35,10 +35,10 @@ Usage
 To run both components of vocoderosc on 1 computer, follow these steps:
 
 1.  If using a device running TouchOSC, change the IP address in the TouchOSC settings to your
-    machine's IP address and set the port number to 7770.
+    machine's IP address and set the port number to 7770 and use the "Keys" layout.
 2.  (a) If using a connected MIDI device such as a MIDI keyboard, change directories to `vocoderosc/vocoderosc_1/` and run `sendOSC.srp`.
 
-    (b) You also have the option of using a MIDI device that is connected to a separate computer. In this case, on the computer connected to the MIDI device, modify lines 13-17 of the file `vocoderosc/vocoderosc_1/sendOSC.srp` to match the code snippet below, replacing the parameter `"IP ADDRESS"` on line 17 with the IP address of the machine running the vocoder:
+    (b) You also have the option of using a MIDI device that is connected to a separate computer, interfacing through Serpent. In this case, on the computer connected to the MIDI device, modify lines 13-17 of the file `vocoderosc/vocoderosc_1/sendOSC.srp` to match the code snippet below, replacing the parameter `"IP ADDRESS"` on line 17 with the IP address of the machine running the vocoder:
     ```sh
     13 // osc client
     14 def startup():
