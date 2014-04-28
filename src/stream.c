@@ -1,3 +1,9 @@
+/** stream.c
+ *  Everything necessary for a PortAudio stream on a computer running the vocoder.
+ *  Takes input from the synthesizer and a microphone, applies the vocoder process
+ *  to them, and ouputs the result.
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
