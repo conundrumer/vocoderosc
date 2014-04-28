@@ -54,7 +54,7 @@ static int paCallback( const void    *inputBuffer,
             } else if (data->mode == 1) {
                 /* The LO server component should only output the carrier */
                 carrier = synth_getNext(data->synth);
-                *out++ = carrier/4;
+                *out++ = carrier;
             } else if (data->mode == 2) {
                 /* The vocoder component takes input from the mic and synth
                    and outputs the result of vc_process */
@@ -66,14 +66,6 @@ static int paCallback( const void    *inputBuffer,
                 /* OUTPUTS */
                 *out++ = vc_process(modulator, carrier, i, framesPerBuffer, data->vc);   
             }
-            // carrier = synth_getNext(data->synth); // use synth
-            // carrier = 2*(float)rand()/(float)RAND_MAX - 1; // use white noise
-            
-            /* OUTPUTS */
-            // *out++ = vc_process(modulator, carrier, i, framesPerBuffer, vc);
-            // *out++ = modulator + carrier; // output: input + synth
-            // *out++ = carrier/4; // output: synth
-            // *out++ = modulator; // output: input
         }
     }
     return 0;

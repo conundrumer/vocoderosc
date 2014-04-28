@@ -123,7 +123,7 @@ int push_handler(const char *path, const char *types, lo_arg ** argv,
     int note_on = argv[0]->i;
     
     if (note_on) synth_on(key, synth);
-    else         synth_off(key, synth);
+    else synth_off(key, synth);
 
     free(octstr);
     free(keystr);
