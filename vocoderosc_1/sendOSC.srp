@@ -1,0 +1,78 @@
+# sendOSC -- receives midi input and sends OSC messages
+#
+# Matt Kent
+# Apr 22, 2014
+
+# This program receives midi input and sends OSC messages
+# to LOCALHOST (the local machine) on port 8001 or sends messages 
+# to Noelle's computer.
+
+require "debug"
+debug_stack_print = t
+
+// osc client
+def startup():
+    # addr = osc_create_address("", "8001", false) // local
+    # noelle's computer
+    addr = osc_create_address("128.237.123.99", "7770", false) 
+
+def send_int(path, val):
+    osc_send_start()
+    for v in val:
+        osc_add_int32(v)
+    var i = osc_send(addr, path)
+    display i
+
+//handler
+def send_midi(pitch, note_on):
+    send_int("/keyboard", [pitch, note_on])
+
+def receive_midi():
+    var midi_in = midi_create() // create an unopened PortMidi stream
+    var midi_dev = midi_in_default() // default device number
+    var midi_in_count = midi_count_devices()
+    var i
+    for i=0 to midi_in_count:
+        display midi_get_device_info(i)
+        interface_name = midi_get_device_info(i)[0]
+        // KeyRig 49 is the midi input device we are using
+        if interface_name == "KeyRig 49":
+            midi_dev = i
+            print "Midi input successfully set to KeyRig"
+
+    if midi_dev == midi_in_default():
+        print "Midi input is set to default"
+    if midi_open_input(midi_in, midi_dev, 100) != 0:
+        print "Error opening MIDI device for input"
+        return "Error opening MIDI device for input"
+    var input = midi_read(midi_in)
+    while (true):
+        if input != nil:
+            var timestamp = input[0]
+            var write = input[1]
+            var status = ord(write[0])
+            var pitch = ord(write[1])
+            var vel = ord(write[2])
+            var note_on
+            if (vel > 0):
+                note_on = 1
+            else:
+                note_on = 0
+            send_midi(pitch, note_on)
+            # display timestamp
+            # display status
+            # display pitch
+            # display vel
+            # display note_on
+            # print "\n"
+        input = midi_read(midi_in)
+        time_sleep(.01) // Check for new input this often
+    time_sleep(1.0 / 1000) // allow time to play notes
+    midi_close(midi_in)
+
+def run():
+    startup()
+    while (true):
+        receive_midi()
+
+run()

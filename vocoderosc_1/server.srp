@@ -1,0 +1,30 @@
+# server.srp -- a test program to receive from sendOsc.srp
+#
+# Matt Kent
+# Apr 22, 2014
+
+# run this with serpent or serpent64 (not wxserpent)
+#
+# this program demostrates receiving OSC messages from a client,
+# specifically sendOSC.srp
+
+require "debug"
+require "sched"
+require "utils"
+require "midi-io"
+
+osc_enabled = t
+
+osc_server_init("8001", t)
+osc_server_method("/keyboard", "ii", nil, 'keyboard')
+
+// osc server function
+def keyboard(path, pitch, note_on):
+    display "Midi input yall", path, pitch, note_on
+
+def run():
+    while true
+        osc_server_poll()
+        time_sleep(0.1) // Polls every .1 seconds
+
+run()
