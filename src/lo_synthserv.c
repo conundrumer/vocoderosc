@@ -1,5 +1,6 @@
 /* Initializes the synthesizer, opens the PortAudio stream, and starts
- * the libLO server. */
+ * the libLO server. This version of synthserv is for a computer running only
+ * the synthesizer. */
 
 #include <stdio.h>
 #include <math.h>
