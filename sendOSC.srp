@@ -5,7 +5,7 @@
 
 # This program receives midi input and sends OSC messages
 # to LOCALHOST (the local machine) on port 8001 or sends messages 
-# to Noelle's computer.
+# to another computer.
 
 require "debug"
 debug_stack_print = t
@@ -13,7 +13,7 @@ debug_stack_print = t
 // osc client
 def startup():
     # addr = osc_create_address("", "8001", false) // local
-    # noelle's computer
+    # another computer
     addr = osc_create_address("128.237.123.99", "7770", false) 
 
 def send_int(path, val):
