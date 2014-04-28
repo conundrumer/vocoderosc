@@ -9,6 +9,11 @@
 
 #define NUM_KEYS (12)
 
+/**
+ * lo_server.c
+ * Starts an OSC server using the libLO library to handle OSC messages and
+ * pass key and octave information to the synthesizer. */
+
 int done = 0;
 
 void error(int num, const char *m, const char *path);
@@ -123,7 +128,7 @@ int push_handler(const char *path, const char *types, lo_arg ** argv,
     int note_on = argv[0]->i;
     
     if (note_on) synth_on(key, synth);
-    else         synth_off(key, synth);
+    else synth_off(key, synth);
 
     free(octstr);
     free(keystr);
