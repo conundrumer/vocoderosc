@@ -1,5 +1,5 @@
-/* Initializes the synthesizer, opens the PortAudio stream, and starts
- * the libLO server. */
+/* Initializes the synthesizer and opens a PortAudio stream. This version
+ * is for a computer only running the vocoder process. */
 
 #include <stdio.h>
 #include <math.h>
