@@ -1,12 +1,6 @@
 test:
 	gcc -o bin/test -Wall -Wextra src/* -llo -lportaudio
 
-pa_stream:
-	gcc -o bin/pa_stream -Wall -Wextra src/synthserv.c src/vocoder.c src/vocodermodulator.c src/fx.c src/fx_multiband.c src/bandpass.c src/attenuator.c src/volumedetector.c src/stream.c src/vocodercarrier.c src/utils.c -lportaudio -lm
-
-lo_server:
-	gcc -o bin/lo_server -Wall -Wextra src/synth.c src/lo_server.c src/saw.c src/lo_synthserv.c src/lo_stream.c src/utils.c -llo -lportaudio
-
 test-win32:
 	gcc -o bin/test -Wall -Wextra src/* -llo -lportaudio -lws2_32
 
@@ -27,6 +21,9 @@ nbs_test:
 
 bp_ir:
 	gcc -o bin/bp_ir -Wall -Wextra src/fx.c src/bandpass.c src/utils.c tests/bp_ir.c -lm
+
+mb_test1:
+	gcc -o bin/mb_test1 -Wall -Wextra src/fx.c src/mb_test1.c src/bandpass.c src/utils.c src/fx_multiband.c
 
 mb_ir:
 	gcc -o bin/mb_ir -Wall -Wextra src/fx.c src/bandpass.c src/utils.c src/fx_multiband.c tests/mb_ir.c -lm

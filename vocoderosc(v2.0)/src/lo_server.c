@@ -8,6 +8,7 @@
 #include "../headers/synth.h"
 
 #define NUM_KEYS (12)
+// #define SAMPLE_RATE   (44100)
 
 int done = 0;
 
@@ -34,6 +35,8 @@ int startLO(Synth* synth) {
     /* Start a new server on port 7770 */
     lo_server s = lo_server_new("7770", error);
     printf("...Now listening on port 7770\n");
+
+    // Synth* synth = synth_new(SAMPLE_RATE, NUM_KEYS);
 
     /* Add OSC handler for MIDI keyboard */
     lo_server_add_method(s, "/keyboard", "ii", keyboard_handler, synth);

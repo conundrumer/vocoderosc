@@ -11,6 +11,12 @@
 #define SAMPLE_RATE       (44100)
 #define FORMAT            paFloat32
 
+typedef struct {
+    Synth*   synth;
+    Vocoder* vc;
+    int      mode;
+} paData;
+
 /* This routine will be called by the PortAudio engine when audio is needed.
 ** It may called at interrupt level on some machines so don't do anything
 ** that could mess up the system like calling malloc() or free().
@@ -28,27 +34,45 @@ static int paCallback( const void    *inputBuffer,
     unsigned int i;
 
     /* Cast data passed through the stream */
-    float *out   = (float*) outputBuffer;
-    Synth* synth = (Synth*) userData;
+    const float *in = (const float*) inputBuffer;
+    float *out      = (float*) outputBuffer;
+    paData* data    = (paData*) userData;
 
-    float carrier;
-    if( inputBuffer == NULL) {
+    float modulator, carrier;
+    if(inputBuffer == NULL) {
         for (i = 0; i < framesPerBuffer; i++) {
             *out++ = 0;
         }
     } else {
         for(i = 0; i < framesPerBuffer; i++) {
-            
-            /* INPUTS */
-            // modulator = *in++; // main / left
-            // carrier = *in++; // right if two input channels
-            carrier = synth_getNext(synth); // use synth
+            if (data->mode == 0) {
+                /* Modulator, carrier, and vocoder are all running on one
+                   system */
+                modulator = *in++;
+                carrier   = synth_getNext(data->synth);
+                *out++    = vc_process(modulator, carrier, i, framesPerBuffer, data->vc);
+            } else if (data->mode == 1) {
+                /* The LO server component should only output the carrier */
+                carrier = synth_getNext(data->synth);
+                *out++ = carrier/4;
+            } else if (data->mode == 2) {
+                /* The vocoder component takes input from the mic and synth
+                   and outputs the result of vc_process */
+
+                /* INPUTS */
+                modulator = *in++; // main / left
+                carrier = *in++; // right if two input channels
+                
+                /* OUTPUTS */
+                *out++ = vc_process(modulator, carrier, i, framesPerBuffer, data->vc);   
+            }
+            // carrier = synth_getNext(data->synth); // use synth
             // carrier = 2*(float)rand()/(float)RAND_MAX - 1; // use white noise
             
             /* OUTPUTS */
             // *out++ = vc_process(modulator, carrier, i, framesPerBuffer, vc);
             // *out++ = modulator + carrier; // output: input + synth
-            *out++ = carrier/4; // output: synth
+            // *out++ = carrier/4; // output: synth
             // *out++ = modulator; // output: input
         }
     }
@@ -59,17 +83,18 @@ static int paCallback( const void    *inputBuffer,
 PaStream *stream;
 PaError err;
 
-int openPA(Synth* synth);
+int openPA(Synth* synth, Vocoder* vc, int mode);
 int closePA();
 
-int openPA(Synth* synth) {
+int openPA(Synth* synth, Vocoder* vc, int mode) {
     printf("PortAudio Test: output sawtooth wave.\n"); fflush(stdout);
 
     PaStreamParameters inputParameters, outputParameters;
 
-    // paData* data = (paData*) malloc(sizeof(paData));
-    // data->synth  = synth;
-    // data->vc     = vc;
+    paData* data = (paData*) malloc(sizeof(paData));
+    data->synth  = synth;
+    data->vc     = vc;
+    data->mode   = mode;
 
     /* Initialize library before making any other calls. */
     err = Pa_Initialize();
@@ -84,7 +109,13 @@ int openPA(Synth* synth) {
     printf( "Input device # %d.\n", inputParameters.device );
     printf( "Input LL: %g s\n", Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency );
     printf( "Input HL: %g s\n", Pa_GetDeviceInfo( inputParameters.device )->defaultHighInputLatency );
-    inputParameters.channelCount = NUM_INPUT;
+    if (mode == 0) {
+        inputParameters.channelCount = 1;
+        outputParameters.channelCount = 1;
+    } else {
+        inputParameters.channelCount = NUM_INPUT;
+        outputParameters.channelCount = NUM_INPUT;
+    }
     inputParameters.sampleFormat = FORMAT;
     inputParameters.suggestedLatency = 
         Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;
@@ -99,7 +130,7 @@ int openPA(Synth* synth) {
     printf( "Output device # %d.\n", outputParameters.device );
     printf( "Output LL: %g s\n", Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency );
     printf( "Output HL: %g s\n", Pa_GetDeviceInfo( outputParameters.device )->defaultHighOutputLatency );
-    outputParameters.channelCount = NUM_OUTPUT;
+    // outputParameters.channelCount = NUM_OUTPUT;
     outputParameters.sampleFormat = FORMAT;
     outputParameters.suggestedLatency = 
         Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;
@@ -114,7 +145,7 @@ int openPA(Synth* synth) {
             FRAMES_PER_BUFFER,
             paClipOff,
             paCallback,
-            synth );
+            data );
     if( err != paNoError ) goto error;
 
     err = Pa_StartStream( stream );
@@ -127,7 +158,7 @@ error:
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );
     fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
-    synth_free(synth);
+    // synth_free(data->synth);
     // vc_free(vc);
     return err;
 }

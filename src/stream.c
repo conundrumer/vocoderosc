@@ -11,10 +11,11 @@
 #define SAMPLE_RATE       (44100)
 #define FORMAT            paFloat32
 
-// typedef struct {
-//     Synth*   synth;
-//     Vocoder* vc;
-// } paData;
+typedef struct {
+    Synth*   synth;
+    Vocoder* vc;
+    int mode;
+} paData;
 
 /* This routine will be called by the PortAudio engine when audio is needed.
 ** It may called at interrupt level on some machines so don't do anything
