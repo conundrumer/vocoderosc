@@ -4,8 +4,15 @@
 #include "../headers/synth.h"
 #include "../headers/utils.h"
 
+/**
+ * Synth: Contains the number of and array of saw waves for use
+ */
+
 void printChart(Synth* s);
 
+/** 
+ * synth_new: allocates and returns a new Synth
+ */
 Synth* synth_new(int fs, int numvoices) {
     Synth* synth = malloc(sizeof(Synth));
     synth->saws  = malloc(numvoices*sizeof(Saw*));
@@ -18,6 +25,10 @@ Synth* synth_new(int fs, int numvoices) {
     return synth;
 }
 
+/** 
+ * synth_on:
+ * checks for an available saw. if it finds one, turns the saw on
+ */
 void synth_on(int key, Synth* s) {
     Saw** saws = s->saws;
     int i;
@@ -33,6 +44,10 @@ void synth_on(int key, Synth* s) {
     return;
 }
 
+/**
+ * synth_off:
+ * checks for the saw corresponding to the key. when found, turns it off
+ */
 void synth_off(int key, Synth* s) {
     Saw** saws = s->saws;
     int i;
@@ -48,6 +63,9 @@ void synth_off(int key, Synth* s) {
     return;
 }
 
+/**
+ * synth_allOff(Synth* s): turns off all saws of the synth
+ */
 void synth_allOff(Synth* s) {
     Saw** saws = s->saws;
     int i;
@@ -58,11 +76,18 @@ void synth_allOff(Synth* s) {
     return;
 }
 
+/**
+ * synth_free: frees the memory allocated for the synth
+ */
 void synth_free(Synth* s) {
     free(s->saws);
     free(s);
 }
 
+/**
+ * synth_getNext:
+ * given synth data, get the ith sample of the waveform
+ */
 float synth_getNext(Synth* s) {
     int i;
     Saw** saws = s->saws;
@@ -73,6 +98,7 @@ float synth_getNext(Synth* s) {
     return sample;
 }
 
+/* just a helpful function for printing out keys for all saws */
 void printChart(Synth* s) {
     int i;
     printf(".............\n Saw\tKey\t\n.............\n");
