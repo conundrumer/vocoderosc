@@ -12,7 +12,7 @@ debug_stack_print = t
 
 // osc client
 def startup():
-    addr = osc_create_address("", "8001", false) // local
+    addr = osc_create_address("", "7770", false) // local
     # another computer
     # addr = osc_create_address("128.237.123.99", "7770", false) 
 
