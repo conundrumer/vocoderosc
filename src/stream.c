@@ -130,7 +130,7 @@ error:
     fprintf( stderr, "An error occured while using the portaudio stream\n" );
     fprintf( stderr, "Error number: %d\n", err );
     fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
-    vc_free(vc);
+    synth_free(synth);
     return err;
 }
 
