@@ -1,3 +1,8 @@
+/**
+ * lo_server.c
+ * Starts an OSC server using the libLO library to handle OSC messages and
+ * pass key and octave information to the synthesizer. */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
@@ -8,7 +13,6 @@
 #include "../headers/synth.h"
 
 #define NUM_KEYS (12)
-// #define SAMPLE_RATE   (44100)
 
 int done = 0;
 
@@ -35,8 +39,6 @@ int startLO(Synth* synth) {
     /* Start a new server on port 7770 */
     lo_server s = lo_server_new("7770", error);
     printf("...Now listening on port 7770\n");
-
-    // Synth* synth = synth_new(SAMPLE_RATE, NUM_KEYS);
 
     /* Add OSC handler for MIDI keyboard */
     lo_server_add_method(s, "/keyboard", "ii", keyboard_handler, synth);
@@ -126,7 +128,7 @@ int push_handler(const char *path, const char *types, lo_arg ** argv,
     int note_on = argv[0]->i;
     
     if (note_on) synth_on(key, synth);
-    else         synth_off(key, synth);
+    else synth_off(key, synth);
 
     free(octstr);
     free(keystr);

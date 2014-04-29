@@ -3,6 +3,11 @@
 #include <math.h>
 #include "../headers/attenuator.h"
 
+/**
+ * The attenuator transitions samples from the synthesizer to
+ * volumes determined by volume detectors filtering voice input
+ */
+
 typedef struct {
     float attack;
     float decay;

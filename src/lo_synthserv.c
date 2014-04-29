@@ -1,5 +1,6 @@
-/* Initializes the synthesizer and opens a PortAudio stream. This version
- * is for a computer only running the vocoder process. */
+/* Initializes the synthesizer, opens the PortAudio stream, and starts
+ * the libLO server. This version of synthserv is for a computer running only
+ * the synthesizer. */
 
 #include <stdio.h>
 #include <math.h>
@@ -12,17 +13,18 @@
 #define NUM_BANDS     (100)
 #define SAMPLE_RATE   (44100)
 #define F_LO          (80)
-#define F_HI          (12000)
+#define F_HI		  (12000)
 
 // To stop implicit declaration warnings
-int openPA(Vocoder* vc);
+int openPA(Synth* synth);
+void startLO(Synth* synth);
 
 int main();
 int main() {
-    Vocoder* vc = vc_new(F_LO, F_HI, NUM_BANDS, SAMPLE_RATE);
+    Synth* synth = synth_new(SAMPLE_RATE, NUM_VOICES);
 
-    if (openPA(vc) == 0) {
-        while (1) {} // no OSC server
+    if (openPA(synth) == 0) {
+        startLO(synth);
     }
     return 0;
 }

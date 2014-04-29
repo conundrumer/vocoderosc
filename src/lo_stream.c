@@ -1,3 +1,7 @@
+/** lo_stream.c
+ *  Everything necessary for a PortAudio stream on a computer running the synthesizer.
+ *  Ouputs samples from the synthesizer onto the vocoder. */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -10,11 +14,6 @@
 #define NUM_OUTPUT        (1)
 #define SAMPLE_RATE       (44100)
 #define FORMAT            paFloat32
-
-// typedef struct {
-//     Synth*   synth;
-//     Vocoder* vc;
-// } paData;
 
 /* This routine will be called by the PortAudio engine when audio is needed.
 ** It may called at interrupt level on some machines so don't do anything
@@ -30,12 +29,10 @@ static int paCallback( const void    *inputBuffer,
     /* To stop unused variable warnings */    
     (void) timeInfo;
     (void) statusFlags;
-    (void*) inputBuffer;
     unsigned int i;
 
     /* Cast data passed through the stream */
-    float *out      = (float*)outputBuffer;
-    // paData* data    = (paData*)userData;
+    float *out   = (float*) outputBuffer;
     Synth* synth = (Synth*) userData;
 
     float carrier;
@@ -73,10 +70,6 @@ int openPA(Synth* synth) {
     printf("PortAudio Test: output sawtooth wave.\n"); fflush(stdout);
 
     PaStreamParameters inputParameters, outputParameters;
-
-    // paData* data = (paData*) malloc(sizeof(paData));
-    // data->synth  = synth;
-    // data->vc     = vc;
 
     /* Initialize library before making any other calls. */
     err = Pa_Initialize();
@@ -135,7 +128,6 @@ error:
     fprintf( stderr, "Error number: %d\n", err );
     fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
     synth_free(synth);
-    // vc_free(vc);
     return err;
 }
 

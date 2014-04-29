@@ -1,13 +1,14 @@
-#pragma once
-
-#include "fx.h"
-#include "volumedetector.h"
-
 /**
  * Vcm:
  * Contains a multiband Fx, an array of pointers to band volumes, and the
  * number of bands.
  */
+ 
+#pragma once
+
+#include "fx.h"
+#include "volumedetector.h"
+
 typedef struct {
     int numBands;
     float** vdVols;
