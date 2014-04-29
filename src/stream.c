@@ -47,15 +47,15 @@ static int paCallback( const void    *inputBuffer,
         for(i = 0; i < framesPerBuffer; i++) {
             
             /* INPUTS */
-            modulator = *in++; // main / left
-            carrier = *in++; // right if two input channels
-            // carrier = synth_getNext(data->synth); // use synth
+            // modulator = *in++; // main / left
+            // carrier = *in++; // right if two input channels
+            carrier = synth_getNext(synth); // use synth
             // carrier = 2*(float)rand()/(float)RAND_MAX - 1; // use white noise
             
             /* OUTPUTS */
-            *out++ = vc_process(modulator, carrier, i, framesPerBuffer, vc);
+            // *out++ = vc_process(modulator, carrier, i, framesPerBuffer, vc);
             // *out++ = modulator + carrier; // output: input + synth
-            // *out++ = carrier/4; // output: synth
+            *out++ = carrier/4; // output: synth
             // *out++ = modulator; // output: input
         }
     }
@@ -66,10 +66,10 @@ static int paCallback( const void    *inputBuffer,
 PaStream *stream;
 PaError err;
 
-int openPA(Vocoder* vc);
+int openPA(Synth* synth);
 int closePA();
 
-int openPA(Vocoder* vc) {
+int openPA(Synth* synth) {
     printf("PortAudio Test: output sawtooth wave.\n"); fflush(stdout);
 
     PaStreamParameters inputParameters, outputParameters;
@@ -117,7 +117,7 @@ int openPA(Vocoder* vc) {
             FRAMES_PER_BUFFER,
             paClipOff,
             paCallback,
-            vc );
+            synth );
     if( err != paNoError ) goto error;
 
     err = Pa_StartStream( stream );

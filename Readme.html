@@ -38,7 +38,7 @@ machine&#39;s IP address and set the port number to 7770.</li>
 <p>(b) You also have the option of using a MIDI device that is connected to a separate computer. In this case, on the computer connected to the MIDI device, modify lines 13-17 of the file <code>vocoderosc/vocoderosc_1/sendOSC.srp</code> to match the code snippet below, replacing the parameter <code>&quot;IP ADDRESS&quot;</code> on line 17 with the IP address of the machine running the vocoder:</p>
 <pre><code class="lang-sh">13 // osc client
 14 def startup():
-15     # addr = osc_create_address(&quot;&quot;, &quot;8001&quot;, false) // local
+15     # addr = osc_create_address(&quot;&quot;, &quot;7770&quot;, false) // local
 16     # another computer
 17     addr = osc_create_address(&quot;IP ADDRESS&quot;, &quot;7770&quot;, false)</code></pre>
 <p>Then, on the computer connected to the MIDI device, change directories to <code>vocoder/vocoderosc_1/</code> and run <code>sendOSC.srp</code>.</p>
