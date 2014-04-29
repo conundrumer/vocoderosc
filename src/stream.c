@@ -47,15 +47,13 @@ static int paCallback( const void    *inputBuffer,
         for(i = 0; i < framesPerBuffer; i++) {
             
             /* INPUTS */
-            // modulator = *in++; // main / left
-            // carrier = *in++; // right if two input channels
-            carrier = synth_getNext(synth); // use synth
-            // carrier = 2*(float)rand()/(float)RAND_MAX - 1; // use white noise
+            modulator = *in++; // main / left
+            carrier = *in++; // right if two input channels
             
             /* OUTPUTS */
-            // *out++ = vc_process(modulator, carrier, i, framesPerBuffer, vc);
+            *out++ = vc_process(modulator, carrier, i, framesPerBuffer, vc);
             // *out++ = modulator + carrier; // output: input + synth
-            *out++ = carrier/4; // output: synth
+            // *out++ = carrier/4; // output: synth
             // *out++ = modulator; // output: input
         }
     }
