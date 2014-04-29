@@ -42,7 +42,7 @@ To run both components of vocoderosc on 1 computer, follow these steps:
     ```sh
     13 // osc client
     14 def startup():
-    15     # addr = osc_create_address("", "8001", false) // local
+    15     # addr = osc_create_address("", "7770", false) // local
     16     # another computer
     17     addr = osc_create_address("IP ADDRESS", "7770", false) 
     ```
